@@ -1,0 +1,1099 @@
+[
+  {
+    "domain": "vertex",
+    "text": "Your company built a TensorFlow neutral-network model with a large number of neurons and layers. The model fits well for the training data. However, when tested against new data, it performs poorly. What method can you employ to address this?",
+    "options": [
+      "Threading",
+      "Serialization",
+      "Dropout Methods",
+      "Dimensionality Reduction"
+    ],
+    "correct": 2,
+    "explanation": ""
+  },
+  {
+    "domain": "vertex",
+    "text": "You are building a model to make clothing recommendations. You know a user's fashion preference is likely to change over time, so you build a data pipeline to stream new data back to the model as it becomes available. How should you use this data to train the model?",
+    "options": [
+      "Continuously retrain the model on just the new data.",
+      "Continuously retrain the model on a combination of existing data and the new data.",
+      "Train on the existing data while using the new data as your test set.",
+      "Train on the new data while using the existing data as your test set."
+    ],
+    "correct": 1,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "You designed a database for patient records as a pilot project to cover a few hundred patients in three clinics. Your design used a single database table to represent all patients and their visits, and you used self-joins to generate reports. The server resource utilization was at 50%. Since then, the scope of the project has expanded. The database must now store 100 times more patient records. You can no longer run the reports, because they either take too long or they encounter errors with insufficient compute resources. How should you adjust the database design?",
+    "options": [
+      "Add capacity (memory and disk space) to the database server by the order of 200.",
+      "Shard the tables into smaller ones based on date ranges, and only generate reports with prespecified date ranges.",
+      "Normalize the master patient-record table into the patient table and the visits table, and create other necessary tables to avoid self-join.",
+      "Partition the table into smaller tables, with one for each clinic. Run queries against the smaller table pairs, and use unions for consolidated reports."
+    ],
+    "correct": 2,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "You create an important report for your large team in Google Data Studio 360. The report uses Google BigQuery as its data source. You notice that visualizations are not showing data that is less than 1 hour old. What should you do?",
+    "options": [
+      "Disable caching by editing the report settings.",
+      "Disable caching in BigQuery by editing table details.",
+      "Refresh your browser tab showing the visualizations.",
+      "Clear your browser history for the past hour then reload the tab showing the virtualizations."
+    ],
+    "correct": 0,
+    "explanation": ""
+  },
+  {
+    "domain": "dataflow",
+    "text": "An external customer provides you with a daily dump of data from their database. The data flows into Google Cloud Storage GCS as comma-separated values (CSV) files. You want to analyze this data in Google BigQuery, but the data could have rows that are formatted incorrectly or corrupted. How should you build this pipeline?",
+    "options": [
+      "Use federated data sources, and check data in the SQL query.",
+      "Enable BigQuery monitoring in Google Stackdriver and create an alert.",
+      "Import the data into BigQuery using the gcloud CLI and set max_bad_records to 0.",
+      "Run a Google Cloud Dataflow batch pipeline to import the data into BigQuery, and push errors to another dead-letter table for analysis."
+    ],
+    "correct": 3,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "Your weather app queries a database every 15 minutes to get the current temperature. The frontend is powered by Google App Engine and serves millions of users. How should you design the frontend to respond to a database failure?",
+    "options": [
+      "Issue a command to restart the database servers.",
+      "Retry the query with exponential backoff, up to a cap of 15 minutes.",
+      "Retry the query every second until it comes back online to minimize staleness of data.",
+      "Reduce the query frequency to once every hour until the database comes back online."
+    ],
+    "correct": 1,
+    "explanation": ""
+  },
+  {
+    "domain": "vertex",
+    "text": "You are creating a model to predict housing prices. Due to budget constraints, you must run it on a single resource-constrained virtual machine. Which learning algorithm should you use?",
+    "options": [
+      "Linear regression",
+      "Logistic classification",
+      "Recurrent neural network",
+      "Feedforward neural network"
+    ],
+    "correct": 0,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "You are building new real-time data warehouse for your company and will use Google BigQuery streaming inserts. There is no guarantee that data will only be sent in once but you do have a unique ID for each row of data and an event timestamp. You want to ensure that duplicates are not included while interactively querying data. Which query type should you use?",
+    "options": [
+      "Include ORDER BY DESK on timestamp column and LIMIT to 1.",
+      "Use GROUP BY on the unique ID column and timestamp column and SUM on the values.",
+      "Use the LAG window function with PARTITION by unique ID along with WHERE LAG IS NOT NULL.",
+      "Use the ROW_NUMBER window function with PARTITION by unique ID along with WHERE row equals 1."
+    ],
+    "correct": 3,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "Your company is using WILDCARD tables to query data across multiple tables with similar names. The SQL statement is currently failing with the following error: '# Syntax error : Expected end of statement but got \"-\" at [4:11]'. Which table name will make the SQL statement work correctly?",
+    "options": [
+      "'bigquery-public-data.noaa_gsod.gsod'",
+      "bigquery-public-data.noaa_gsod.gsod*",
+      "'bigquery-public-data.noaa_gsod.gsod'*",
+      "`bigquery-public-data.noaa_gsod.gsod*`"
+    ],
+    "correct": 3,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "Your company is in a highly regulated industry. One of your requirements is to ensure individual users have access only to the minimum amount of information required to do their jobs. You want to enforce this requirement with Google BigQuery. Which three approaches can you take? (Choose three.)",
+    "options": [
+      "Disable writes to certain tables.",
+      "Restrict access to tables by role.",
+      "Ensure that the data is encrypted at all times.",
+      "Restrict BigQuery API access to approved users.",
+      "Segregate data across multiple tables or databases.",
+      "Use Google Stackdriver Audit Logging to determine policy violations."
+    ],
+    "correct": 1,
+    "explanation": ""
+  },
+  {
+    "domain": "dataflow",
+    "text": "You are designing a basket abandonment system for an ecommerce company. The system will send a message to a user based on these rules: No interaction by the user on the site for 1 hour, has added more than $30 worth of products to the basket, and has not completed a transaction. You use Google Cloud Dataflow to process the data and decide if a message should be sent. How should you design the pipeline?",
+    "options": [
+      "Use a fixed-time window with a duration of 60 minutes.",
+      "Use a sliding time window with a duration of 60 minutes.",
+      "Use a session window with a gap time duration of 60 minutes.",
+      "Use a global window with a time based trigger with a delay of 60 minutes."
+    ],
+    "correct": 2,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "Your company handles data processing for a number of different clients. Each client prefers to use their own suite of analytics tools, with some allowing direct query access via Google BigQuery. You need to secure the data so that clients cannot see each other's data. You want to ensure appropriate access to the data. Which three steps should you take? (Choose three.)",
+    "options": [
+      "Load data into different partitions.",
+      "Load data into a different dataset for each client.",
+      "Put each client's BigQuery dataset into a different table.",
+      "Restrict a client's dataset to approved users.",
+      "Only allow a service account to access the datasets.",
+      "Use the appropriate identity and access management (IAM) roles for each client's users."
+    ],
+    "correct": 1,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "You want to process payment transactions in a point-of-sale application that will run on Google Cloud Platform. Your user base could grow exponentially, but you do not want to manage infrastructure scaling. Which Google database service should you use?",
+    "options": [
+      "Cloud SQL",
+      "BigQuery",
+      "Cloud Bigtable",
+      "Cloud Datastore"
+    ],
+    "correct": 0,
+    "explanation": ""
+  },
+  {
+    "domain": "vertex",
+    "text": "You want to use a database of information about tissue samples to classify future tissue samples as either normal or mutated. You are evaluating an unsupervised anomaly detection method for classifying the tissue samples. Which two characteristics support this method? (Choose two.)",
+    "options": [
+      "There are very few occurrences of mutations relative to normal samples.",
+      "There are roughly equal occurrences of both normal and mutated samples in the database.",
+      "You expect future mutations to have different features from the mutated samples in the database.",
+      "You expect future mutations to have similar features to the mutated samples in the database.",
+      "You already have labels for which samples are mutated and which are normal in the database."
+    ],
+    "correct": 1,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "You need to store and analyze social media postings in Google BigQuery at a rate of 10,000 messages per minute in near real-time. Initially, design the application to use streaming inserts for individual postings. Your application also performs data aggregations right after the streaming inserts. You discover that the queries after streaming inserts do not exhibit strong consistency, and reports from the queries might miss in-flight data. How can you adjust your application design?",
+    "options": [
+      "Re-write the application to load accumulated data every 2 minutes.",
+      "Convert the streaming insert code to batch load for individual messages.",
+      "Load the original message to Google Cloud SQL, and export the table every hour to BigQuery via streaming inserts.",
+      "Estimate the average latency for data availability after streaming inserts, and always run queries after waiting twice as long."
+    ],
+    "correct": 3,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "Your startup has never implemented a formal security policy. Currently, everyone in the company has access to the datasets stored in Google BigQuery. Teams have freedom to use the service as they see fit, and they have not documented their use cases. You have been asked to secure the data warehouse. You need to discover what everyone is doing. What should you do first?",
+    "options": [
+      "Use Google Stackdriver Audit Logs to review data access.",
+      "Get the identity and access management (IAM) policy of each table.",
+      "Use Stackdriver Monitoring to see the usage of BigQuery query slots.",
+      "Use the Google Cloud Billing API to see what account the warehouse is being billed to."
+    ],
+    "correct": 0,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "Your company is migrating their 30-node Apache Hadoop cluster to the cloud. They want to re-use Hadoop jobs they have already created and minimize the management of the cluster as much as possible. They also want to be able to persist data beyond the life of the cluster. What should you do?",
+    "options": [
+      "Create a Google Cloud Dataflow job to process the data.",
+      "Create a Google Cloud Dataproc cluster that uses persistent disks for HDFS.",
+      "Create a Hadoop cluster on Google Compute Engine that uses persistent disks.",
+      "Create a Cloud Dataproc cluster that uses the Google Cloud Storage connector.",
+      "Create a Hadoop cluster on Google Compute Engine that uses Local SSD disks."
+    ],
+    "correct": 3,
+    "explanation": ""
+  },
+  {
+    "domain": "vertex",
+    "text": "Business owners at your company have given you a database of bank transactions. Each row contains the user ID, transaction type, transaction location, and transaction amount. They ask you to investigate what type of machine learning can be applied to the data. Which three machine learning applications can you use? (Choose three.)",
+    "options": [
+      "Supervised learning to determine which transactions are most likely to be fraudulent.",
+      "Unsupervised learning to determine which transactions are most likely to be fraudulent.",
+      "Clustering to divide the transactions into N categories based on feature similarity.",
+      "Supervised learning to predict the location of a transaction.",
+      "Reinforcement learning to predict the location of a transaction.",
+      "Unsupervised learning to predict the location of a transaction."
+    ],
+    "correct": 1,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "Your company's on-premises Apache Hadoop servers are approaching end-of-life, and IT has decided to migrate the cluster to Google Cloud Dataproc. A like-for-like migration of the cluster would require 50 TB of Google Persistent Disk per node. The CIO is concerned about the cost of using that much block storage. You want to minimize the storage cost of the migration. What should you do?",
+    "options": [
+      "Put the data into Google Cloud Storage.",
+      "Use preemptible virtual machines (VMs) for the Cloud Dataproc cluster.",
+      "Tune the Cloud Dataproc cluster so that there is just enough disk for all data.",
+      "Migrate some of the cold data into Google Cloud Storage, and keep only the hot data in Persistent Disk."
+    ],
+    "correct": 0,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "You work for a car manufacturer and have set up a data pipeline using Google Cloud Pub/Sub to capture anomalous sensor events. You are using a push subscription in Cloud Pub/Sub that calls a custom HTTPS endpoint that you have created to take action of these anomalous events as they occur. Your custom HTTPS endpoint keeps getting an inordinate amount of duplicate messages. What is the most likely cause of these duplicate messages?",
+    "options": [
+      "The message body for the sensor event is too large.",
+      "Your custom endpoint has an out-of-date SSL certificate.",
+      "The Cloud Pub/Sub topic has too many messages published to it.",
+      "Your custom endpoint is not acknowledging messages within the acknowledgement deadline."
+    ],
+    "correct": 3,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "Your company uses a proprietary system to send inventory data every 6 hours to a data ingestion service in the cloud. Transmitted data includes a payload of several fields and the timestamp of the transmission. If there are any concerns about a transmission, the system re-transmits the data. How should you deduplicate the data most efficiency?",
+    "options": [
+      "Assign global unique identifiers (GUID) to each data entry.",
+      "Compute the hash value of each data entry, and compare it with all historical data.",
+      "Store each data entry as the primary key in a separate database and apply an index.",
+      "Maintain a database table to store the hash value and other metadata for each data entry."
+    ],
+    "correct": 3,
+    "explanation": ""
+  },
+  {
+    "domain": "vertex",
+    "text": "Your company has hired a new data scientist who wants to perform complicated analyses across very large datasets stored in Google Cloud Storage and in a Cassandra cluster on Google Compute Engine. The scientist primarily wants to create labelled data sets for machine learning projects, along with some visualization tasks. She reports that her laptop is not powerful enough to perform her tasks and it is slowing her down. What should you do?",
+    "options": [
+      "Run a local version of Jupiter on the laptop.",
+      "Grant the user access to Google Cloud Shell.",
+      "Host a visualization tool on a VM on Google Compute Engine.",
+      "Deploy Google Cloud Datalab to a virtual machine (VM) on Google Compute Engine."
+    ],
+    "correct": 3,
+    "explanation": ""
+  },
+  {
+    "domain": "dataflow",
+    "text": "You are deploying 10,000 new Internet of Things devices to collect temperature data in your warehouses globally. You need to process, store and analyze these very large datasets in real time. What should you do?",
+    "options": [
+      "Send the data to Google Cloud Datastore and then export to BigQuery.",
+      "Send the data to Google Cloud Pub/Sub, stream Cloud Pub/Sub to Google Cloud Dataflow, and store the data in Google BigQuery.",
+      "Send the data to Cloud Storage and then spin up an Apache Hadoop cluster as needed in Google Cloud Dataproc whenever analysis is required.",
+      "Export logs in batch to Google Cloud Storage and then spin up a Google Cloud SQL instance, import the data from Cloud Storage, and run an analysis as needed."
+    ],
+    "correct": 1,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "You have spent a few days loading data from comma-separated values (CSV) files into the Google BigQuery table CLICK_STREAM. The column DT stores the epoch time of click events. For convenience, you chose a simple schema where every field is treated as the STRING type. Now, you want to compute web session durations of users who visit your site, and you want to change its data type to the TIMESTAMP. You want to minimize the migration effort without making future queries computationally expensive. What should you do?",
+    "options": [
+      "Delete the table CLICK_STREAM, and then re-create it such that the column DT is of the TIMESTAMP type. Reload the data.",
+      "Add a column TS of the TIMESTAMP type to the table CLICK_STREAM, and populate the numeric values from the column TS for each row. Reference the column TS instead of the column DT from now on.",
+      "Create a view CLICK_STREAM_V, where strings from the column DT are cast into TIMESTAMP values. Reference the view CLICK_STREAM_V instead of the table CLICK_STREAM from now on.",
+      "Add two columns to the table CLICK STREAM: TS of the TIMESTAMP type and IS_NEW of the BOOLEAN type. Reload all data in append mode. For each appended row, set the value of IS_NEW to true. For future queries, reference the column TS instead of the column DT, with the WHERE clause ensuring that the value of IS_NEW must be true.",
+      "Construct a query to return every row of the table CLICK_STREAM, while using the built-in function to cast strings from the column DT into TIMESTAMP values. Run the query into a destination table NEW_CLICK_STREAM, in which the column TS is the TIMESTAMP type. Reference the table NEW_CLICK_STREAM instead of the table CLICK_STREAM from now on. In the future, new data is loaded into the table NEW_CLICK_STREAM."
+    ],
+    "correct": 4,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "You want to use Google Stackdriver Logging to monitor Google BigQuery usage. You need an instant notification to be sent to your monitoring tool when new data is appended to a certain table using an insert job, but you do not want to receive notifications for other tables. What should you do?",
+    "options": [
+      "Make a call to the Stackdriver API to list all logs, and apply an advanced filter.",
+      "In the Stackdriver logging admin interface, and enable a log sink export to BigQuery.",
+      "In the Stackdriver logging admin interface, enable a log sink export to Google Cloud Pub/Sub, and subscribe to the topic from your monitoring tool.",
+      "Using the Stackdriver API, create a project sink with advanced log filter to export to Pub/Sub, and subscribe to the topic from your monitoring tool."
+    ],
+    "correct": 3,
+    "explanation": ""
+  },
+  {
+    "domain": "dataflow",
+    "text": "You are working on a sensitive project involving private user data. You have set up a project on Google Cloud Platform to house your work internally. An external consultant is going to assist with coding a complex transformation in a Google Cloud Dataflow pipeline for your project. How should you maintain users' privacy?",
+    "options": [
+      "Grant the consultant the Viewer role on the project.",
+      "Grant the consultant the Cloud Dataflow Developer role on the project.",
+      "Create a service account and allow the consultant to log on with it.",
+      "Create an anonymized sample of the data for the consultant to work with in a different project."
+    ],
+    "correct": 3,
+    "explanation": ""
+  },
+  {
+    "domain": "vertex",
+    "text": "You are building a model to predict whether or not it will rain on a given day. You have thousands of input features and want to see if you can improve training speed by removing some features while having a minimum effect on model accuracy. What can you do?",
+    "options": [
+      "Eliminate features that are highly correlated to the output labels.",
+      "Combine highly co-dependent features into one representative feature.",
+      "Instead of feeding in each feature individually, average their values in batches of 3.",
+      "Remove the features that have null values for more than 50% of the training records."
+    ],
+    "correct": 1,
+    "explanation": ""
+  },
+  {
+    "domain": "dataflow",
+    "text": "Your company is performing data preprocessing for a learning algorithm in Google Cloud Dataflow. Numerous data logs are being generated during this step, and the team wants to analyze them. Due to the dynamic nature of the campaign, the data is growing exponentially every hour. The data scientists have written code using BigQueryIO.Read to read the data. You want to improve the performance of this data read. What should you do?",
+    "options": [
+      "Specify the TableReference object in the code.",
+      "Use .fromQuery operation to read specific fields from the table.",
+      "Use of both the Google BigQuery TableSchema and TableFieldSchema classes.",
+      "Call a transform that returns TableRow objects, where each element in the PCollection represents a single row in the table."
+    ],
+    "correct": 3,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "Your company is streaming real-time sensor data from their factory floor into Bigtable and they have noticed extremely poor performance. How should the row key be redesigned to improve Bigtable performance on queries that populate real-time dashboards?",
+    "options": [
+      "Use a row key of the form <timestamp>.",
+      "Use a row key of the form <sensorid>.",
+      "Use a row key of the form <timestamp>#<sensorid>.",
+      "Use a row key of the form >#<sensorid>#<timestamp>."
+    ],
+    "correct": 3,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "Your company's customer and order databases are often under heavy load. This makes performing analytics against them difficult without harming operations. The databases are in a MySQL cluster, with nightly backups taken using mysqldump. You want to perform analytics with minimal impact on operations. What should you do?",
+    "options": [
+      "Add a node to the MySQL cluster and build an OLAP cube there.",
+      "Use an ETL tool to load the data from MySQL into Google BigQuery.",
+      "Connect an on-premises Apache Hadoop cluster to MySQL and perform ETL.",
+      "Mount the backups to Google Cloud SQL, and then process the data using Google Cloud Dataproc."
+    ],
+    "correct": 1,
+    "explanation": ""
+  },
+  {
+    "domain": "dataflow",
+    "text": "You have Google Cloud Dataflow streaming pipeline running with a Google Cloud Pub/Sub subscription as the source. You need to make an update to the code that will make the new Cloud Dataflow pipeline incompatible with the current version. You do not want to lose any data when making this update. What should you do?",
+    "options": [
+      "Update the current pipeline and use the drain flag.",
+      "Update the current pipeline and provide the transform mapping JSON object.",
+      "Create a new pipeline that has the same Cloud Pub/Sub subscription and cancel the old pipeline.",
+      "Create a new pipeline that has a new Cloud Pub/Sub subscription and cancel the old pipeline."
+    ],
+    "correct": 3,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "Your company is running their first dynamic campaign, serving different offers by analyzing real-time data during the holiday season. The data scientists are collecting terabytes of data that rapidly grows every hour during their 30-day campaign. They are using Google Cloud Dataflow to preprocess the data and collect the feature (signals) data that is needed for the machine learning model in Google Cloud Bigtable. The team is observing suboptimal performance with reads and writes of their initial load of 10 TB of data. They want to improve this performance while minimizing cost. What should they do?",
+    "options": [
+      "Redefine the schema by evenly distributing reads and writes across the row space of the table.",
+      "The performance issue should be resolved over time as the site of the BigDate cluster is increased.",
+      "Redesign the schema to use a single row key to identify values that need to be updated frequently in the cluster.",
+      "Redesign the schema to use row keys based on numeric IDs that increase sequentially per user viewing the offers."
+    ],
+    "correct": 0,
+    "explanation": ""
+  },
+  {
+    "domain": "dataflow",
+    "text": "Your software uses a simple JSON format for all messages. These messages are published to Google Cloud Pub/Sub, then processed with Google Cloud Dataflow to create a real-time dashboard for the CFO. During testing, you notice that some messages are missing in the dashboard. You check the logs, and all messages are being published to Cloud Pub/Sub successfully. What should you do next?",
+    "options": [
+      "Check the dashboard application to see if it is not displaying correctly.",
+      "Run a fixed dataset through the Cloud Dataflow pipeline and analyze the output.",
+      "Use Google Stackdriver Monitoring on Cloud Pub/Sub to find the missing messages.",
+      "Switch Cloud Dataflow to pull messages from Cloud Pub/Sub instead of Cloud Pub/Sub pushing messages to Cloud Dataflow."
+    ],
+    "correct": 1,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "Flowlogistic wants to use Google BigQuery as their primary analysis system, but they still have Apache Hadoop and Spark workloads that they cannot move to BigQuery. Flowlogistic does not know how to store the data that is common to both workloads. What should they do?",
+    "options": [
+      "Store the common data in BigQuery as partitioned tables.",
+      "Store the common data in BigQuery and expose authorized views.",
+      "Store the common data encoded as Avro in Google Cloud Storage.",
+      "Store the common data in the HDFS storage for a Google Cloud Dataproc cluster."
+    ],
+    "correct": 2,
+    "explanation": ""
+  },
+  {
+    "domain": "dataflow",
+    "text": "Flowlogistic's management has determined that the current Apache Kafka servers cannot handle the data volume for their real-time inventory tracking system. You need to build a new system on Google Cloud Platform (GCP) that will feed the proprietary tracking software. The system must be able to ingest data from a variety of global sources, process and query in real-time, and store the data reliably. Which combination of GCP products should you choose?",
+    "options": [
+      "Cloud Pub/Sub, Cloud Dataflow, and Cloud Storage",
+      "Cloud Pub/Sub, Cloud Dataflow, and Local SSD",
+      "Cloud Pub/Sub, Cloud SQL, and Cloud Storage",
+      "Cloud Load Balancing, Cloud Dataflow, and Cloud Storage"
+    ],
+    "correct": 0,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "Flowlogistic's CEO wants to gain rapid insight into their customer base so his sales team can be better informed in the field. This team is not very technical, so they've purchased a visualization tool to simplify the creation of BigQuery reports. However, they've been overwhelmed by all the data in the table, and are spending a lot of money on queries trying to find the data they need. You want to solve their problem in the most cost-effective way. What should you do?",
+    "options": [
+      "Export the data into a Google Sheet for virtualization.",
+      "Create an additional table with only the necessary columns.",
+      "Create a view on the table to present to the virtualization tool.",
+      "Create identity and access management (IAM) roles on the appropriate columns, so only they appear in a query."
+    ],
+    "correct": 2,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "Flowlogistic is rolling out their real-time inventory tracking system. The tracking devices will all send package-tracking messages, which will now go to a single Google Cloud Pub/Sub topic instead of the Apache Kafka cluster. A subscriber application will then process the messages for real-time reporting and store them in Google BigQuery for historical analysis. You want to ensure the package data can be analyzed over time. Which approach should you take?",
+    "options": [
+      "Attach the timestamp on each message in the Cloud Pub/Sub subscriber application as they are received.",
+      "Attach the timestamp and Package ID on the outbound message from each publisher device as they are sent to Cloud Pub/Sub.",
+      "Use the NOW() function in BigQuery to record the event's time.",
+      "Use the automatically generated timestamp from Cloud Pub/Sub to order the data."
+    ],
+    "correct": 1,
+    "explanation": ""
+  },
+  {
+    "domain": "dataflow",
+    "text": "MJTelco's Google Cloud Dataflow pipeline is now ready to start receiving data from the 50,000 installations. You want to allow Cloud Dataflow to scale its compute power up as required. Which Cloud Dataflow pipeline configuration setting should you update?",
+    "options": [
+      "The zone",
+      "The number of workers",
+      "The disk size per worker",
+      "The maximum number of workers"
+    ],
+    "correct": 3,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "You need to compose visualizations for operations teams with the following requirements: The report must include telemetry data from all 50,000 installations for the most recent 6 weeks (sampling once every minute). The report must not be more than 3 hours delayed from live data. The actionable report should only show suboptimal links. Most suboptimal links should be sorted to the top. Suboptimal links can be grouped and filtered by regional geography. User response time to load the report must be <5 seconds. Which approach meets the requirements?",
+    "options": [
+      "Load the data into Google Sheets, use formulas to calculate a metric, and use filters/sorting to show only suboptimal links in a table.",
+      "Load the data into Google BigQuery tables, write Google Apps Script that queries the data, calculates the metric, and shows only suboptimal rows in a table in Google Sheets.",
+      "Load the data into Google Cloud Datastore tables, write a Google App Engine Application that queries all rows, applies a function to derive the metric, and then renders results in a table using the Google charts and visualization API.",
+      "Load the data into Google BigQuery tables, write a Google Data Studio 360 report that connects to your data, calculates a metric, and then uses a filter expression to show only suboptimal rows in a table."
+    ],
+    "correct": 3,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "You create a new report for your large team in Google Data Studio 360. The report uses Google BigQuery as its data source. It is company policy to ensure employees can view only the data associated with their region, so you create and populate a table for each region. You need to enforce the regional access policy to the data. Which two actions should you take? (Choose two.)",
+    "options": [
+      "Ensure all the tables are included in global dataset.",
+      "Ensure each table is included in a dataset for a region.",
+      "Adjust the settings for each table to allow a related region-based security group view access.",
+      "Adjust the settings for each view to allow a related region-based security group view access.",
+      "Adjust the settings for each dataset to allow a related region-based security group view access."
+    ],
+    "correct": 1,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "You need to choose a schema for a Cloud Bigtable table that stores telemetry data from devices. Each device has a device_id, generates data_point values at specific dates. Which schema design should you use?",
+    "options": [
+      "Rowkey: date#device_id Column data: data_point",
+      "Rowkey: date Column data: device_id, data_point",
+      "Rowkey: device_id Column data: date, data_point",
+      "Rowkey: data_point Column data: device_id, date",
+      "Rowkey: date#data_point Column data: device_id"
+    ],
+    "correct": 3,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "Your company produces 20,000 files every hour. Each data file is formatted as a comma separated values (CSV) file that is less than 4 KB. All files must be ingested on Google Cloud Platform before they can be processed. Your company site has a 200 ms latency to Google Cloud, and your Internet connection bandwidth is limited as 50 Mbps. You currently deploy a secure FTP (SFTP) server on a virtual machine in Google Compute Engine as the data ingestion point. A local SFTP client runs on a dedicated machine to transmit the CSV files as is. The goal is to make reports with data from the previous day available to the executives by 10:00 a.m. each day. This design is barely able to keep up with the current volume, even though the bandwidth utilization is rather low. You are told that due to seasonality, your company expects the number of files to double for the next three months. Which two actions should you take? (Choose two.)",
+    "options": [
+      "Introduce data compression for each file to increase the rate file of file transfer.",
+      "Contact your internet service provider (ISP) to increase your maximum bandwidth to at least 100 Mbps.",
+      "Redesign the data ingestion process to use gsutil tool to send the CSV files to a storage bucket in parallel.",
+      "Assemble 1,000 files into a tape archive (TAR) file. Transmit the TAR files instead, and disassemble the CSV files in the cloud upon receiving them.",
+      "Create an S3-compatible storage endpoint in your network, and use Google Cloud Storage Transfer Service to transfer on-premises data to the designated storage bucket."
+    ],
+    "correct": 2,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "You are choosing a NoSQL database to handle telemetry data submitted from millions of Internet-of-Things (IoT) devices. The volume of data is growing at 100 TB per year, and each data entry has about 100 attributes. The data processing pipeline does not require atomicity, consistency, isolation, and durability (ACID). However, high availability and low latency are required. You need to analyze the data by querying against individual fields. Which three databases meet your requirements? (Choose three.)",
+    "options": [
+      "Redis",
+      "HBase",
+      "MySQL",
+      "MongoDB",
+      "Cassandra",
+      "HDFS with Hive"
+    ],
+    "correct": 1,
+    "explanation": ""
+  },
+  {
+    "domain": "vertex",
+    "text": "You are training a spam classifier. You notice that you are overfitting the training data. Which three actions can you take to resolve this problem? (Choose three.)",
+    "options": [
+      "Get more training examples",
+      "Reduce the number of training examples",
+      "Use a smaller set of features",
+      "Use a larger set of features",
+      "Increase the regularization parameters",
+      "Decrease the regularization parameters"
+    ],
+    "correct": 0,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "You are implementing security best practices on your data pipeline. Currently, you are manually executing jobs as the Project Owner. You want to automate these jobs by taking nightly batch files containing non-public information from Google Cloud Storage, processing them with a Spark Scala job on a Google Cloud Dataproc cluster, and depositing the results into Google BigQuery. How should you securely run this workload?",
+    "options": [
+      "Restrict the Google Cloud Storage bucket so only you can see the files",
+      "Grant the Project Owner role to a service account, and run the job with it",
+      "Use a service account with the ability to read the batch files and to write to BigQuery",
+      "Use a user account with the Project Viewer role on the Cloud Dataproc cluster to read the batch files and write to BigQuery"
+    ],
+    "correct": 2,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "You are using Google BigQuery as your data warehouse. Your users report that the following simple query is running very slowly, no matter when they run the query: SELECT country, state, city FROM [myproject:mydataset.mytable] GROUP BY country. You check the query plan for the query and see a heavily skewed Read stage. What is the most likely cause of the delay for this query?",
+    "options": [
+      "Users are running too many concurrent queries in the system",
+      "The [myproject:mydataset.mytable] table has too many partitions",
+      "Either the state or the city columns in the [myproject:mydataset.mytable] table have too many NULL values",
+      "Most rows in the [myproject:mydataset.mytable] table have the same value in the country column, causing data skew"
+    ],
+    "correct": 3,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "Your globally distributed auction application allows users to bid on items. Occasionally, users place identical bids at nearly identical times, and different application servers process those bids. Each bid event contains the item, amount, user, and timestamp. You want to collate those bid events into a single location in real time to determine which user bid first. What should you do?",
+    "options": [
+      "Create a file on a shared file and have the application servers write all bid events to that file. Process the file with Apache Hadoop to identify which user bid first.",
+      "Have each application server write the bid events to Cloud Pub/Sub as they occur. Push the events from Cloud Pub/Sub to a custom endpoint that writes the bid event information into Cloud SQL.",
+      "Set up a MySQL database for each application server to write bid events into. Periodically query each of those distributed MySQL databases and update a master MySQL database with bid event information.",
+      "Have each application server write the bid events to Google Cloud Pub/Sub as they occur. Use a pull subscription to pull the bid events using Google Cloud Dataflow. Give the bid for each item to the user in the bid event that is processed first."
+    ],
+    "correct": 1,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "Your organization has been collecting and analyzing data in Google BigQuery for 6 months. The majority of the data analyzed is placed in a time-partitioned table named events_partitioned. To reduce the cost of queries, your organization created a view called events, which queries only the last 14 days of data. The view is described in legacy SQL. Next month, existing applications will be connecting to BigQuery to read the events data via an ODBC connection. You need to ensure the applications can connect. Which two actions should you take? (Choose two.)",
+    "options": [
+      "Create a new view over events using standard SQL",
+      "Create a new partitioned table using a standard SQL query",
+      "Create a new view over events_partitioned using standard SQL",
+      "Create a service account for the ODBC connection to use for authentication",
+      "Create a Google Cloud Identity and Access Management (Cloud IAM) role for the ODBC connection and shared the events view"
+    ],
+    "correct": 0,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "You have enabled the free integration between Firebase Analytics and Google BigQuery. Firebase now automatically creates a new table daily in BigQuery in the format app_events_YYYYMMDD. You want to query all of the tables for the past 30 days in legacy SQL. What should you do?",
+    "options": [
+      "Use the TABLE_DATE_RANGE function",
+      "Use the WHERE_PARTITIONTIME pseudo column",
+      "Use WHERE date BETWEEN YYYY-MM-DD AND YYYY-MM-DD",
+      "Use SELECT IF.(date >= YYYY-MM-DD AND date <= YYYY-MM-DD"
+    ],
+    "correct": 0,
+    "explanation": ""
+  },
+  {
+    "domain": "dataflow",
+    "text": "Your company is currently setting up data pipelines for their campaign. For all the Google Cloud Pub/Sub streaming data, one of the important business requirements is to be able to periodically identify the inputs and their timings during their campaign. Engineers have decided to use windowing and transformation in Google Cloud Dataflow for this purpose. However, when testing this feature, they find that the Cloud Dataflow job fails for the all streaming insert. What is the most likely cause of this problem?",
+    "options": [
+      "They have not assigned the timestamp, which causes the job to fail",
+      "They have not set the triggers to accommodate the data coming in late, which causes the job to fail",
+      "They have not applied a global windowing function, which causes the job to fail when the pipeline is created",
+      "They have not applied a non-global windowing function, which causes the job to fail when the pipeline is created"
+    ],
+    "correct": 3,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "You architect a system to analyze seismic data. Your extract, transform, and load (ETL) process runs as a series of MapReduce jobs on an Apache Hadoop cluster. The ETL process takes days to process a data set because some steps are computationally expensive. Then you discover that a sensor calibration step has been omitted. How should you change your ETL process to carry out sensor calibration systematically in the future?",
+    "options": [
+      "Modify the transformMapReduce jobs to apply sensor calibration before they do anything else.",
+      "Introduce a new MapReduce job to apply sensor calibration to raw data, and ensure all other MapReduce jobs are chained after this.",
+      "Add sensor calibration data to the output of the ETL process, and document that all users need to apply sensor calibration themselves.",
+      "Develop an algorithm through simulation to predict variance of data output from the last MapReduce job based on calibration factors, and apply the correction to all data."
+    ],
+    "correct": 1,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "An online retailer has built their current application on Google App Engine. A new initiative at the company mandates that they extend their application to allow their customers to transact directly via the application. They need to manage their shopping transactions and analyze combined data from multiple datasets using a business intelligence (BI) tool. They want to use only a single database for this purpose. Which Google Cloud database should they choose?",
+    "options": [
+      "BigQuery",
+      "Cloud SQL",
+      "Cloud BigTable",
+      "Cloud Datastore"
+    ],
+    "correct": 1,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "You launched a new gaming app almost three years ago. You have been uploading log files from the previous day to a separate Google BigQuery table with the table name format LOGS_yyyymmdd. You have been using table wildcard functions to generate daily and monthly reports for all time ranges. Recently, you discovered that some queries that cover long date ranges are exceeding the limit of 1,000 tables and failing. How can you resolve this issue?",
+    "options": [
+      "Convert all daily log tables into date-partitioned tables",
+      "Convert the sharded tables into a single partitioned table",
+      "Enable query caching so you can cache data from previous months",
+      "Create separate views to cover each month, and query from these views"
+    ],
+    "correct": 1,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "Your analytics team wants to build a simple statistical model to determine which customers are most likely to work with your company again, based on a few different metrics. They want to run the model on Apache Spark, using data housed in Google Cloud Storage, and you have recommended using Google Cloud Dataproc to execute this job. Testing has shown that this workload can run in approximately 30 minutes on a 15-node cluster, outputting the results into Google BigQuery. The plan is to run this workload weekly. How should you optimize the cluster for cost?",
+    "options": [
+      "Migrate the workload to Google Cloud Dataflow",
+      "Use pre-emptible virtual machines (VMs) for the cluster",
+      "Use a higher-memory node so that the job runs faster",
+      "Use SSDs on the worker nodes so that the job can run faster"
+    ],
+    "correct": 1,
+    "explanation": ""
+  },
+  {
+    "domain": "dataflow",
+    "text": "Your company receives both batch- and stream-based event data. You want to process the data using Google Cloud Dataflow over a predictable time period. However, you realize that in some instances data can arrive late or out of order. How should you design your Cloud Dataflow pipeline to handle data that is late or out of order?",
+    "options": [
+      "Set a single global window to capture all the data.",
+      "Set sliding windows to capture all the lagged data.",
+      "Use watermarks and timestamps to capture the lagged data.",
+      "Ensure every datasource type (stream or batch) has a timestamp, and use the timestamps to define the logic for lagged data."
+    ],
+    "correct": 2,
+    "explanation": ""
+  },
+  {
+    "domain": "vertex",
+    "text": "You have some data with two dimensions X and Y, where the shade of each dot represents its class. You want to classify this data accurately using a linear algorithm. To do this you need to add a synthetic feature. What should the value of that feature be?",
+    "options": [
+      "X2+Y2",
+      "X2",
+      "Y2",
+      "cos(X)"
+    ],
+    "correct": 0,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "You are integrating one of your internal IT applications and Google BigQuery, so users can query BigQuery from the application's interface. You do not want individual users to authenticate to BigQuery and you do not want to give them access to the dataset. You need to securely access BigQuery from your IT application. What should you do?",
+    "options": [
+      "Create groups for your users and give those groups access to the dataset",
+      "Integrate with a single sign-on (SSO) platform, and pass each user's credentials along with the query request",
+      "Create a service account and grant dataset access to that account. Use the service account's private key to access the dataset",
+      "Create a dummy user and grant dataset access to that user. Store the username and password for that user in a file on the files system, and use those credentials to access the BigQuery dataset"
+    ],
+    "correct": 2,
+    "explanation": ""
+  },
+  {
+    "domain": "dataflow",
+    "text": "You are building a data pipeline on Google Cloud. You need to prepare data using a casual method for a machine-learning process. You want to support a logistic regression model. You also need to monitor and adjust for null values, which must remain real-valued and cannot be removed. What should you do?",
+    "options": [
+      "Use Cloud Dataprep to find null values in sample source data. Convert all nulls to 'none' using a Cloud Dataproc job.",
+      "Use Cloud Dataprep to find null values in sample source data. Convert all nulls to 0 using a Cloud Dataprep job.",
+      "Use Cloud Dataflow to find null values in sample source data. Convert all nulls to 'none' using a Cloud Dataprep job.",
+      "Use Cloud Dataflow to find null values in sample source data. Convert all nulls to 0 using a custom script."
+    ],
+    "correct": 1,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "You set up a streaming data insert into a Redis cluster via a Kafka cluster. Both clusters are running on Compute Engine instances. You need to encrypt data at rest with encryption keys that you can create, rotate, and destroy as needed. What should you do?",
+    "options": [
+      "Create a dedicated service account, and use encryption at rest to reference your data stored in your Compute Engine cluster instances as part of your API service calls.",
+      "Create encryption keys in Cloud Key Management Service. Use those keys to encrypt your data in all of the Compute Engine cluster instances.",
+      "Create encryption keys locally. Upload your encryption keys to Cloud Key Management Service. Use those keys to encrypt your data in all of the Compute Engine cluster instances.",
+      "Create encryption keys in Cloud Key Management Service. Reference those keys in your API service calls when accessing the data in your Compute Engine cluster instances."
+    ],
+    "correct": 1,
+    "explanation": ""
+  },
+  {
+    "domain": "vertex",
+    "text": "You are developing an application that uses a recommendation engine on Google Cloud. Your solution should display new videos to customers based on past views. Your solution needs to generate labels for the entities in videos that the customer has viewed. Your design must be able to provide very fast filtering suggestions based on data from other customer preferences on several TB of data. What should you do?",
+    "options": [
+      "Build and train a complex classification model with Spark MLlib to generate labels and filter the results. Deploy the models using Cloud Dataproc. Call the model from your application.",
+      "Build and train a classification model with Spark MLlib to generate labels. Build and train a second classification model with Spark MLlib to filter results to match customer preferences. Deploy the models using Cloud Dataproc. Call the models from your application.",
+      "Build an application that calls the Cloud Video Intelligence API to generate labels. Store data in Cloud Bigtable, and filter the predicted labels to match the user's viewing history to generate preferences.",
+      "Build an application that calls the Cloud Video Intelligence API to generate labels. Store data in Cloud SQL, and join and filter the predicted labels to match the user's viewing history to generate preferences."
+    ],
+    "correct": 2,
+    "explanation": ""
+  },
+  {
+    "domain": "dataflow",
+    "text": "You are selecting services to write and transform JSON messages from Cloud Pub/Sub to BigQuery for a data pipeline on Google Cloud. You want to minimize service costs. You also want to monitor and accommodate input data volume that will vary in size with minimal manual intervention. What should you do?",
+    "options": [
+      "Use Cloud Dataproc to run your transformations. Monitor CPU utilization for the cluster. Resize the number of worker nodes in your cluster via the command line.",
+      "Use Cloud Dataproc to run your transformations. Use the diagnose command to generate an operational output archive. Locate the bottleneck and adjust cluster resources.",
+      "Use Cloud Dataflow to run your transformations. Monitor the job system lag with Stackdriver. Use the default autoscaling setting for worker instances.",
+      "Use Cloud Dataflow to run your transformations. Monitor the total execution time for a sampling of jobs. Configure the job to use non-default Compute Engine machine types when needed."
+    ],
+    "correct": 2,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "Your infrastructure includes a set of YouTube channels. You have been tasked with creating a process for sending the YouTube channel data to Google Cloud for analysis. You want to design a solution that allows your world-wide marketing teams to perform ANSI SQL and other types of analysis on up-to-date YouTube channels log data. How should you set up the log data transfer into Google Cloud?",
+    "options": [
+      "Use Storage Transfer Service to transfer the offsite backup files to a Cloud Storage Multi-Regional storage bucket as a final destination.",
+      "Use Storage Transfer Service to transfer the offsite backup files to a Cloud Storage Regional bucket as a final destination.",
+      "Use BigQuery Data Transfer Service to transfer the offsite backup files to a Cloud Storage Multi-Regional storage bucket as a final destination.",
+      "Use BigQuery Data Transfer Service to transfer the offsite backup files to a Cloud Storage Regional storage bucket as a final destination."
+    ],
+    "correct": 3,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "You are designing storage for very large text files for a data pipeline on Google Cloud. You want to support ANSI SQL queries. You also want to support compression and parallel load from the input locations using Google recommended practices. What should you do?",
+    "options": [
+      "Transform text files to compressed Avro using Cloud Dataflow. Use BigQuery for storage and query.",
+      "Transform text files to compressed Avro using Cloud Dataflow. Use Cloud Storage and BigQuery permanent linked tables for query.",
+      "Compress text files to gzip using the Grid Computing Tools. Use BigQuery for storage and query.",
+      "Compress text files to gzip using the Grid Computing Tools. Use Cloud Storage, and then import into Cloud Bigtable for query."
+    ],
+    "correct": 0,
+    "explanation": ""
+  },
+  {
+    "domain": "vertex",
+    "text": "You are developing an application on Google Cloud that will automatically generate subject labels for users' blog posts. You are under competitive pressure to add this feature quickly, and you have no additional developer resources. No one on your team has experience with machine learning. What should you do?",
+    "options": [
+      "Call the Cloud Natural Language API from your application. Process the generated Entity Analysis as labels.",
+      "Call the Cloud Natural Language API from your application. Process the generated Sentiment Analysis as labels.",
+      "Build and train a text classification model using TensorFlow. Deploy the model using Cloud Machine Learning Engine. Call the model from your application and process the results as labels.",
+      "Build and train a text classification model using TensorFlow. Deploy the model using a Kubernetes Engine cluster. Call the model from your application and process the results as labels."
+    ],
+    "correct": 0,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "You are designing storage for 20 TB of text files as part of deploying a data pipeline on Google Cloud. Your input data is in CSV format. You want to minimize the cost of querying aggregate values for multiple users who will query the data in Cloud Storage with multiple engines. Which storage service and schema design should you use?",
+    "options": [
+      "Use Cloud Bigtable for storage. Install the HBase shell on a Compute Engine instance to query the Cloud Bigtable data.",
+      "Use Cloud Bigtable for storage. Link as permanent tables in BigQuery for query.",
+      "Use Cloud Storage for storage. Link as permanent tables in BigQuery for query.",
+      "Use Cloud Storage for storage. Link as temporary tables in BigQuery for query."
+    ],
+    "correct": 2,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "You are designing storage for two relational tables that are part of a 10-TB database on Google Cloud. You want to support transactions that scale horizontally. You also want to optimize data for range queries on non-key columns. What should you do?",
+    "options": [
+      "Use Cloud SQL for storage. Add secondary indexes to support query patterns.",
+      "Use Cloud SQL for storage. Use Cloud Dataflow to transform data to support query patterns.",
+      "Use Cloud Spanner for storage. Add secondary indexes to support query patterns.",
+      "Use Cloud Spanner for storage. Use Cloud Dataflow to transform data to support query patterns."
+    ],
+    "correct": 2,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "Your financial services company is moving to cloud technology and wants to store 50 TB of financial time-series data in the cloud. This data is updated frequently and new data will be streaming in all the time. Your company also wants to move their existing Apache Hadoop jobs to the cloud to get insights into this data. Which product should they use to store the data?",
+    "options": [
+      "Cloud Bigtable",
+      "Google BigQuery",
+      "Google Cloud Storage",
+      "Google Cloud Datastore"
+    ],
+    "correct": 0,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "An organization maintains a Google BigQuery dataset that contains tables with user-level data. They want to expose aggregates of this data to other Google Cloud projects, while still controlling access to the user-level data. Additionally, they need to minimize their overall storage cost and ensure the analysis cost for other projects is assigned to those projects. What should they do?",
+    "options": [
+      "Create and share an authorized view that provides the aggregate results.",
+      "Create and share a new dataset and view that provides the aggregate results.",
+      "Create and share a new dataset and table that contains the aggregate results.",
+      "Create dataViewer Identity and Access Management (IAM) roles on the dataset to enable sharing."
+    ],
+    "correct": 0,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "Government regulations in your industry mandate that you have to maintain an auditable record of access to certain types of data. Assuming that all expiring logs will be archived correctly, where should you store data that is subject to that mandate?",
+    "options": [
+      "Encrypted on Cloud Storage with user-supplied encryption keys. A separate decryption key will be given to each authorized user.",
+      "In a BigQuery dataset that is viewable only by authorized personnel, with the Data Access log used to provide the auditability.",
+      "In Cloud SQL, with separate database user names to each user. The Cloud SQL Admin activity logs will be used to provide the auditability.",
+      "In a bucket on Cloud Storage that is accessible only by an AppEngine service that collects user information and logs the access before providing a link to the bucket."
+    ],
+    "correct": 1,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "You have enabled the free integration between Firebase Analytics and Google BigQuery. Firebase now automatically creates a new table daily in BigQuery in the format app_events_YYYYMMDD. You want to query all of the tables for the past 30 days in legacy SQL. What should you do?",
+    "options": [
+      "Use the TABLE_DATE_RANGE function",
+      "Use the WHERE_PARTITIONTIME pseudo column",
+      "Use WHERE date BETWEEN YYYY-MM-DD AND YYYY-MM-DD",
+      "Use SELECT IF.(date >= YYYY-MM-DD AND date <= YYYY-MM-DD"
+    ],
+    "correct": 0,
+    "explanation": ""
+  },
+  {
+    "domain": "dataflow",
+    "text": "Your company is currently setting up data pipelines for their campaign. For all the Google Cloud Pub/Sub streaming data, one of the important business requirements is to be able to periodically identify the inputs and their timings during their campaign. Engineers have decided to use windowing and transformation in Google Cloud Dataflow for this purpose. However, when testing this feature, they find that the Cloud Dataflow job fails for the all streaming insert. What is the most likely cause of this problem?",
+    "options": [
+      "They have not assigned the timestamp, which causes the job to fail",
+      "They have not set the triggers to accommodate the data coming in late, which causes the job to fail",
+      "They have not applied a global windowing function, which causes the job to fail when the pipeline is created",
+      "They have not applied a non-global windowing function, which causes the job to fail when the pipeline is created"
+    ],
+    "correct": 3,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "You architect a system to analyze seismic data. Your extract, transform, and load (ETL) process runs as a series of MapReduce jobs on an Apache Hadoop cluster. The ETL process takes days to process a data set because some steps are computationally expensive. Then you discover that a sensor calibration step has been omitted. How should you change your ETL process to carry out sensor calibration systematically in the future?",
+    "options": [
+      "Modify the transformMapReduce jobs to apply sensor calibration before they do anything else.",
+      "Introduce a new MapReduce job to apply sensor calibration to raw data, and ensure all other MapReduce jobs are chained after this.",
+      "Add sensor calibration data to the output of the ETL process, and document that all users need to apply sensor calibration themselves.",
+      "Develop an algorithm through simulation to predict variance of data output from the last MapReduce job based on calibration factors, and apply the correction to all data."
+    ],
+    "correct": 1,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "An online retailer has built their current application on Google App Engine. A new initiative at the company mandates that they extend their application to allow their customers to transact directly via the application. They need to manage their shopping transactions and analyze combined data from multiple datasets using a business intelligence (BI) tool. They want to use only a single database for this purpose. Which Google Cloud database should they choose?",
+    "options": [
+      "BigQuery",
+      "Cloud SQL",
+      "Cloud BigTable",
+      "Cloud Datastore"
+    ],
+    "correct": 1,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "You launched a new gaming app almost three years ago. You have been uploading log files from the previous day to a separate Google BigQuery table with the table name format LOGS_yyyymmdd. You have been using table wildcard functions to generate daily and monthly reports for all time ranges. Recently, you discovered that some queries that cover long date ranges are exceeding the limit of 1,000 tables and failing. How can you resolve this issue?",
+    "options": [
+      "Convert all daily log tables into date-partitioned tables",
+      "Convert the sharded tables into a single partitioned table",
+      "Enable query caching so you can cache data from previous months",
+      "Create separate views to cover each month, and query from these views"
+    ],
+    "correct": 1,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "Your analytics team wants to build a simple statistical model to determine which customers are most likely to work with your company again, based on a few different metrics. They want to run the model on Apache Spark, using data housed in Google Cloud Storage, and you have recommended using Google Cloud Dataproc to execute this job. Testing has shown that this workload can run in approximately 30 minutes on a 15-node cluster, outputting the results into Google BigQuery. The plan is to run this workload weekly. How should you optimize the cluster for cost?",
+    "options": [
+      "Migrate the workload to Google Cloud Dataflow",
+      "Use pre-emptible virtual machines (VMs) for the cluster",
+      "Use a higher-memory node so that the job runs faster",
+      "Use SSDs on the worker nodes so that the job can run faster"
+    ],
+    "correct": 1,
+    "explanation": ""
+  },
+  {
+    "domain": "dataflow",
+    "text": "Your company receives both batch- and stream-based event data. You want to process the data using Google Cloud Dataflow over a predictable time period. However, you realize that in some instances data can arrive late or out of order. How should you design your Cloud Dataflow pipeline to handle data that is late or out of order?",
+    "options": [
+      "Set a single global window to capture all the data.",
+      "Set sliding windows to capture all the lagged data.",
+      "Use watermarks and timestamps to capture the lagged data.",
+      "Ensure every datasource type (stream or batch) has a timestamp, and use the timestamps to define the logic for lagged data."
+    ],
+    "correct": 2,
+    "explanation": ""
+  },
+  {
+    "domain": "vertex",
+    "text": "You have some data, which is shown in the graphic below. The two dimensions are X and Y, and the shade of each dot represents what class it is. You want to classify this data accurately using a linear algorithm. To do this you need to add a synthetic feature. What should the value of that feature be?",
+    "options": [
+      "X2+Y2",
+      "X2",
+      "Y2",
+      "cos(X)"
+    ],
+    "correct": 0,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "You are integrating one of your internal IT applications and Google BigQuery, so users can query BigQuery from the application's interface. You do not want individual users to authenticate to BigQuery and you do not want to give them access to the dataset. You need to securely access BigQuery from your IT application. What should you do?",
+    "options": [
+      "Create groups for your users and give those groups access to the dataset",
+      "Integrate with a single sign-on (SSO) platform, and pass each user's credentials along with the query request",
+      "Create a service account and grant dataset access to that account. Use the service account's private key to access the dataset",
+      "Create a dummy user and grant dataset access to that user. Store the username and password for that user in a file on the files system, and use those credentials to access the BigQuery dataset"
+    ],
+    "correct": 2,
+    "explanation": ""
+  },
+  {
+    "domain": "dataflow",
+    "text": "You are building a data pipeline on Google Cloud. You need to prepare data using a casual method for a machine-learning process. You want to support a logistic regression model. You also need to monitor and adjust for null values, which must remain real-valued and cannot be removed. What should you do?",
+    "options": [
+      "Use Cloud Dataprep to find null values in sample source data. Convert all nulls to 'none' using a Cloud Dataproc job.",
+      "Use Cloud Dataprep to find null values in sample source data. Convert all nulls to 0 using a Cloud Dataprep job.",
+      "Use Cloud Dataflow to find null values in sample source data. Convert all nulls to 'none' using a Cloud Dataprep job.",
+      "Use Cloud Dataflow to find null values in sample source data. Convert all nulls to 0 using a custom script."
+    ],
+    "correct": 1,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "You set up a streaming data insert into a Redis cluster via a Kafka cluster. Both clusters are running on Compute Engine instances. You need to encrypt data at rest with encryption keys that you can create, rotate, and destroy as needed. What should you do?",
+    "options": [
+      "Create a dedicated service account, and use encryption at rest to reference your data stored in your Compute Engine cluster instances as part of your API service calls.",
+      "Create encryption keys in Cloud Key Management Service. Use those keys to encrypt your data in all of the Compute Engine cluster instances.",
+      "Create encryption keys locally. Upload your encryption keys to Cloud Key Management Service. Use those keys to encrypt your data in all of the Compute Engine cluster instances.",
+      "Create encryption keys in Cloud Key Management Service. Reference those keys in your API service calls when accessing the data in your Compute Engine cluster instances."
+    ],
+    "correct": 1,
+    "explanation": ""
+  },
+  {
+    "domain": "vertex",
+    "text": "You are developing an application that uses a recommendation engine on Google Cloud. Your solution should display new videos to customers based on past views. Your solution needs to generate labels for the entities in videos that the customer has viewed. Your design must be able to provide very fast filtering suggestions based on data from other customer preferences on several TB of data. What should you do?",
+    "options": [
+      "Build and train a complex classification model with Spark MLlib to generate labels and filter the results. Deploy the models using Cloud Dataproc. Call the model from your application.",
+      "Build and train a classification model with Spark MLlib to generate labels. Build and train a second classification model with Spark MLlib to filter results to match customer preferences. Deploy the models using Cloud Dataproc. Call the models from your application.",
+      "Build an application that calls the Cloud Video Intelligence API to generate labels. Store data in Cloud Bigtable, and filter the predicted labels to match the user's viewing history to generate preferences.",
+      "Build an application that calls the Cloud Video Intelligence API to generate labels. Store data in Cloud SQL, and join and filter the predicted labels to match the user's viewing history to generate preferences."
+    ],
+    "correct": 2,
+    "explanation": ""
+  },
+  {
+    "domain": "dataflow",
+    "text": "You are selecting services to write and transform JSON messages from Cloud Pub/Sub to BigQuery for a data pipeline on Google Cloud. You want to minimize service costs. You also want to monitor and accommodate input data volume that will vary in size with minimal manual intervention. What should you do?",
+    "options": [
+      "Use Cloud Dataproc to run your transformations. Monitor CPU utilization for the cluster. Resize the number of worker nodes in your cluster via the command line.",
+      "Use Cloud Dataproc to run your transformations. Use the diagnose command to generate an operational output archive. Locate the bottleneck and adjust cluster resources.",
+      "Use Cloud Dataflow to run your transformations. Monitor the job system lag with Stackdriver. Use the default autoscaling setting for worker instances.",
+      "Use Cloud Dataflow to run your transformations. Monitor the total execution time for a sampling of jobs. Configure the job to use non-default Compute Engine machine types when needed."
+    ],
+    "correct": 2,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "Your infrastructure includes a set of YouTube channels. You have been tasked with creating a process for sending the YouTube channel data to Google Cloud for analysis. You want to design a solution that allows your world-wide marketing teams to perform ANSI SQL and other types of analysis on up-to-date YouTube channels log data. How should you set up the log data transfer into Google Cloud?",
+    "options": [
+      "Use Storage Transfer Service to transfer the offsite backup files to a Cloud Storage Multi-Regional storage bucket as a final destination.",
+      "Use Storage Transfer Service to transfer the offsite backup files to a Cloud Storage Regional bucket as a final destination.",
+      "Use BigQuery Data Transfer Service to transfer the offsite backup files to a Cloud Storage Multi-Regional storage bucket as a final destination.",
+      "Use BigQuery Data Transfer Service to transfer the offsite backup files to a Cloud Storage Regional storage bucket as a final destination."
+    ],
+    "correct": 1,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "You are designing storage for very large text files for a data pipeline on Google Cloud. You want to support ANSI SQL queries. You also want to support compression and parallel load from the input locations using Google recommended practices. What should you do?",
+    "options": [
+      "Transform text files to compressed Avro using Cloud Dataflow. Use BigQuery for storage and query.",
+      "Transform text files to compressed Avro using Cloud Dataflow. Use Cloud Storage and BigQuery permanent linked tables for query.",
+      "Compress text files to gzip using the Grid Computing Tools. Use BigQuery for storage and query.",
+      "Compress text files to gzip using the Grid Computing Tools. Use Cloud Storage, and then import into Cloud Bigtable for query."
+    ],
+    "correct": 0,
+    "explanation": ""
+  },
+  {
+    "domain": "vertex",
+    "text": "You are developing an application on Google Cloud that will automatically generate subject labels for users' blog posts. You are under competitive pressure to add this feature quickly, and you have no additional developer resources. No one on your team has experience with machine learning. What should you do?",
+    "options": [
+      "Call the Cloud Natural Language API from your application. Process the generated Entity Analysis as labels.",
+      "Call the Cloud Natural Language API from your application. Process the generated Sentiment Analysis as labels.",
+      "Build and train a text classification model using TensorFlow. Deploy the model using Cloud Machine Learning Engine. Call the model from your application and process the results as labels.",
+      "Build and train a text classification model using TensorFlow. Deploy the model using a Kubernetes Engine cluster. Call the model from your application and process the results as labels."
+    ],
+    "correct": 0,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "You are designing storage for 20 TB of text files as part of deploying a data pipeline on Google Cloud. Your input data is in CSV format. You want to minimize the cost of querying aggregate values for multiple users who will query the data in Cloud Storage with multiple engines. Which storage service and schema design should you use?",
+    "options": [
+      "Use Cloud Bigtable for storage. Install the HBase shell on a Compute Engine instance to query the Cloud Bigtable data.",
+      "Use Cloud Bigtable for storage. Link as permanent tables in BigQuery for query.",
+      "Use Cloud Storage for storage. Link as permanent tables in BigQuery for query.",
+      "Use Cloud Storage for storage. Link as temporary tables in BigQuery for query."
+    ],
+    "correct": 2,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "You are designing storage for two relational tables that are part of a 10-TB database on Google Cloud. You want to support transactions that scale horizontally. You also want to optimize data for range queries on non-key columns. What should you do?",
+    "options": [
+      "Use Cloud SQL for storage. Add secondary indexes to support query patterns.",
+      "Use Cloud SQL for storage. Use Cloud Dataflow to transform data to support query patterns.",
+      "Use Cloud Spanner for storage. Add secondary indexes to support query patterns.",
+      "Use Cloud Spanner for storage. Use Cloud Dataflow to transform data to support query patterns."
+    ],
+    "correct": 2,
+    "explanation": ""
+  },
+  {
+    "domain": "storage",
+    "text": "Your financial services company is moving to cloud technology and wants to store 50 TB of financial time-series data in the cloud. This data is updated frequently and new data will be streaming in all the time. Your company also wants to move their existing Apache Hadoop jobs to the cloud to get insights into this data. Which product should they use to store the data?",
+    "options": [
+      "Cloud Bigtable",
+      "Google BigQuery",
+      "Google Cloud Storage",
+      "Google Cloud Datastore"
+    ],
+    "correct": 0,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "An organization maintains a Google BigQuery dataset that contains tables with user-level data. They want to expose aggregates of this data to other Google Cloud projects, while still controlling access to the user-level data. Additionally, they need to minimize their overall storage cost and ensure the analysis cost for other projects is assigned to those projects. What should they do?",
+    "options": [
+      "Create and share an authorized view that provides the aggregate results.",
+      "Create and share a new dataset and view that provides the aggregate results.",
+      "Create and share a new dataset and table that contains the aggregate results.",
+      "Create dataViewer Identity and Access Management (IAM) roles on the dataset to enable sharing."
+    ],
+    "correct": 0,
+    "explanation": ""
+  },
+  {
+    "domain": "bigquery",
+    "text": "Government regulations in your industry mandate that you have to maintain an auditable record of access to certain types of data. Assuming that all expiring logs will be archived correctly, where should you store data that is subject to that mandate?",
+    "options": [
+      "Encrypted on Cloud Storage with user-supplied encryption keys. A separate decryption key will be given to each authorized user.",
+      "In a BigQuery dataset that is viewable only by authorized personnel, with the Data Access log used to provide the auditability.",
+      "In Cloud SQL, with separate database user names to each user. The Cloud SQL Admin activity logs will be used to provide the auditability.",
+      "In a bucket on Cloud Storage that is accessible only by an AppEngine service that collects user information and logs the access before providing a link to the bucket."
+    ],
+    "correct": 1,
+    "explanation": ""
+  }
+]
