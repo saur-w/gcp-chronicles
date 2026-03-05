@@ -1,343 +1,106 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // ═══════════════════════════════════════════════════════════
 // CHARACTERS
 // ═══════════════════════════════════════════════════════════
 const CHARACTERS = [
-  { id: "kassandra", name: "Kassandra", origin: "Ancient Greece", emoji: "⚔️", color: "#c9a84c", accent: "#ffd700", desc: "Misthios of Sparta. Walks between worlds. Fears nothing.", art: "🏛️" },
-  { id: "aloy", name: "Aloy", origin: "The Frontier", emoji: "🏹", color: "#e8833a", accent: "#ff9f55", desc: "Seeker of truths. Master of ancient machines.", art: "🌿" },
-  { id: "eivor", name: "Eivor", origin: "Norway", emoji: "🪓", color: "#6b9fd4", accent: "#8fc0f0", desc: "Viking shieldmaiden. Conqueror of kingdoms.", art: "⚡" },
-  { id: "zelda", name: "Zelda", origin: "Hyrule", emoji: "✨", color: "#9b72cf", accent: "#c4a7e7", desc: "Princess. Sage. Keeper of ancient wisdom.", art: "🔮" },
-  { id: "custom", name: "Custom", origin: "Your World", emoji: "🌟", color: "#4ade80", accent: "#86efac", desc: "Write your own legend.", art: "🌟" },
+  { id: "kassandra", name: "Kassandra", origin: "Ancient Greece", emoji: "⚔️", color: "#c9a84c", accent: "#ffd700", desc: "Misthios de Esparta. Teme nada.", art: "🏛️" },
+  { id: "aloy", name: "Aloy", origin: "The Frontier", emoji: "🏹", color: "#e8833a", accent: "#ff9f55", desc: "Caçadora de máquinas antigas.", art: "🌿" },
+  { id: "eivor", name: "Eivor", origin: "Norway", emoji: "🪓", color: "#6b9fd4", accent: "#8fc0f0", desc: "Viking conquistadora de reinos.", art: "⚡" },
+  { id: "zelda", name: "Zelda", origin: "Hyrule", emoji: "✨", color: "#9b72cf", accent: "#c4a7e7", desc: "Princesa. Sábia. Guardiã da sabedoria.", art: "🔮" },
+  { id: "custom", name: "Custom", origin: "Your World", emoji: "🌟", color: "#4ade80", accent: "#86efac", desc: "Escreva sua própria lenda.", art: "🌟" },
 ];
 
 // ═══════════════════════════════════════════════════════════
-// WORLD DATA — 5 Cities in the Scorpio Sky
+// WORLD DATA
 // ═══════════════════════════════════════════════════════════
 const CITIES = [
   {
-    id: "bigquery",
-    name: "Querythas",
-    subtitle: "The Crystal Warehouse",
-    emoji: "🏰",
-    color: "#4A90E2",
-    glow: "#4A90E230",
-    domain: "BigQuery — Storage & Optimization",
-    bossName: "The Cost Dragon",
-    bossEmoji: "🐉",
-    bossDesc: "An ancient beast that devours gold with every unoptimized query.",
+    id: "bigquery", name: "Querythas", subtitle: "The Crystal Warehouse", emoji: "🏰",
+    color: "#4A90E2", glow: "#4A90E230", domain: "BigQuery — Storage & Optimization",
+    bossName: "The Cost Dragon", bossEmoji: "🐉", bossDesc: "Um dragão ancestral que devora ouro a cada query não otimizada.",
     locked: false,
     lessons: [
-      {
-        id: "bq-1",
-        title: "Partitioning vs Clustering",
-        icon: "📦",
-        concept: "How to organize data to save gold (money)",
-        keyPoints: [
-          { label: "Partitioning", text: "Physically divides table into segments by date/time. BigQuery skips entire partitions — like locking castle wings you don't need." },
-          { label: "Clustering", text: "Sorts data within partitions by up to 4 columns. Orders from LOWEST to HIGHEST cardinality (state → city → store_id)." },
-          { label: "Use both!", text: "Partition by date + cluster by your filter columns = maximum cost savings and query speed." },
-          { label: "⚠️ Rule", text: "BigQuery only allows ONE partition column per table. No multi-column partitioning!" },
-        ],
-        analogy: "Imagine a medieval archive: Partitioning = separate rooms per year. Clustering = inside each room, scrolls sorted by topic then by author. You only enter the room you need, and find the scroll instantly.",
-        tip: "Always filter on the partition column in your WHERE clause, or you pay for a full table scan!",
-      },
-      {
-        id: "bq-2",
-        title: "Materialized Views vs BI Engine",
-        icon: "⚡",
-        concept: "Pre-computing answers to save time and gold",
-        keyPoints: [
-          { label: "Materialized Views", text: "Pre-aggregate data physically. Refreshed incrementally as source changes. Best for repeated aggregation queries on large tables (TBs)." },
-          { label: "BI Engine", text: "In-memory cache for small dimension tables. Great for dashboards with fast-changing small datasets. Won't hold a 50TB fact table." },
-          { label: "Authorized Views", text: "Access control only — they DON'T improve performance. They just hide data from unauthorized users." },
-          { label: "When to use what", text: "Large table + repeated aggregations → Materialized View. Small table + concurrent BI users → BI Engine. Sharing data securely → Analytics Hub or Authorized Views." },
-        ],
-        analogy: "The palace scribe pre-calculates the kingdom's tax totals every night so the king doesn't wait 10 minutes every morning. That's a Materialized View. BI Engine is the king's personal aide who memorizes the most-asked questions.",
-        tip: "On the exam: if they say 'reduce response time, lower costs, minimize maintenance' for a large aggregated table → Materialized Views is almost always the answer.",
-      },
-      {
-        id: "bq-3",
-        title: "Security & Sharing Data",
-        icon: "🔐",
-        concept: "Who can see what, and how to share without duplicating",
-        keyPoints: [
-          { label: "Analytics Hub", text: "Publish datasets once. Other teams SUBSCRIBE — no data duplication. Creates authorized dataset automatically at subscription time." },
-          { label: "CMEK (Customer-Managed Encryption Keys)", text: "You control the encryption key in Cloud KMS. If key is compromised: create new key + new bucket with CMEK default + copy all objects." },
-          { label: "Cloud EKM", text: "Key stays on YOUR on-premises HSM, never exported to Google. Link to Cloud KMS reference → associate with BigQuery." },
-          { label: "Cloud DLP", text: "De-identify PII before loading. Use CryptoDeterministicConfig (FFX) for deterministic tokenization — preserves join ability across datasets." },
-        ],
-        analogy: "Analytics Hub is the royal library: books are published once, any guild can subscribe to read copies. No need to print the whole book for each guild! EKM is like keeping the master key in your own vault but letting Google's door use a copy of the lock shape.",
-        tip: "Exam trap: bigquery.jobUser role lets users RUN jobs, but does NOT grant access to data. For data access, you need bigquery.dataViewer or higher.",
-      },
+      { id: "bq-1", title: "Partitioning vs Clustering", icon: "📦", concept: "Como organizar dados para economizar ouro (dinheiro)", keyPoints: [{ label: "Partitioning", text: "Divide fisicamente a tabela em segmentos por data/hora. BigQuery pula partições inteiras — como fechar alas do castelo que não precisa." }, { label: "Clustering", text: "Ordena dados dentro das partições por até 4 colunas. Do menor para o maior cardinality (estado → cidade → store_id)." }, { label: "Use os dois!", text: "Particione por data + clustering por colunas de filtro = máxima economia e velocidade." }, { label: "⚠️ Regra", text: "BigQuery só permite UMA coluna de partição por tabela." }], analogy: "Partitioning = salas separadas por ano. Clustering = dentro de cada sala, pergaminhos ordenados por tópico. Você só entra na sala que precisa.", tip: "Sempre filtre na coluna de partição no WHERE, senão paga por um full table scan!" },
+      { id: "bq-2", title: "Materialized Views vs BI Engine", icon: "⚡", concept: "Pré-computar respostas para economizar tempo e ouro", keyPoints: [{ label: "Materialized Views", text: "Pré-agregam dados fisicamente. Refresh incremental quando a fonte muda. Para queries de agregação repetidas em tabelas grandes (TBs)." }, { label: "BI Engine", text: "Cache em memória para tabelas de dimensão pequenas. Ótimo para dashboards com datasets pequenos. Não aguenta uma tabela de 50TB." }, { label: "Authorized Views", text: "Só controle de acesso — NÃO melhoram performance." }, { label: "Quando usar o quê", text: "Grande tabela + agregações repetidas → Materialized View. Tabela pequena + muitos usuários BI → BI Engine. Compartilhar dados com segurança → Analytics Hub." }], analogy: "O escriba do palácio pré-calcula os impostos toda noite para o rei não esperar 10 minutos toda manhã. Isso é uma Materialized View.", tip: "No exame: 'reduzir tempo de resposta, custos, manutenção mínima' para tabela grande agregada → Materialized Views é quase sempre a resposta." },
+      { id: "bq-3", title: "Security & Sharing Data", icon: "🔐", concept: "Quem pode ver o quê, e como compartilhar sem duplicar", keyPoints: [{ label: "Analytics Hub", text: "Publique datasets uma vez. Outros times ASSINAM — sem duplicação. Cria authorized dataset automaticamente." }, { label: "CMEK", text: "Você controla a chave de criptografia no Cloud KMS." }, { label: "Cloud EKM", text: "Chave fica no SEU HSM on-premises, nunca exportada para o Google." }, { label: "Cloud DLP", text: "De-identifique PII antes de carregar. Use CryptoDeterministicConfig para tokenização determinística — preserva JOINs." }], analogy: "Analytics Hub é a biblioteca real: livros publicados uma vez, qualquer guilda pode assinar. Sem precisar imprimir o livro inteiro para cada guilda!", tip: "Armadilha: bigquery.jobUser permite EXECUTAR jobs, mas NÃO concede acesso aos dados. Para acesso, precisa bigquery.dataViewer ou superior." },
     ],
     questions: [
-      { text: "You need to query a 10TB transactions table, filtering by the last 30 days, grouped by state, city, and store. How should you structure the table?", analogy: "🐉 The Cost Dragon is watching every byte you scan!", options: ["Partition by transaction_time; cluster by state → city → store_id", "Partition by transaction_time; cluster by store_id → city → state", "Cluster only by state → city → store_id (no partition)", "Cluster only by store_id → city → state (no partition)"], correct: 0, explanation: "Partition by time (prunes old data from scans) + cluster from LOW to HIGH cardinality (state→city→store_id) matches the most common filter patterns. Reverse clustering order reduces pruning efficiency." },
-      { text: "Your BI tool runs hundreds of queries daily aggregating a 50TB sales table. Queries are slow and expensive. Minimize response time, cost, and maintenance.", analogy: "🐉 The dragon charges gold per byte scanned. Pre-cook your answers!", options: ["Build materialized views with day and month aggregations", "Build authorized views with day and month aggregations", "Enable BI Engine and add the sales table as preferred table", "Create a scheduled query to build aggregate tables hourly"], correct: 0, explanation: "Materialized views physically pre-aggregate data. BI Engine caches small dimension tables (won't hold 50TB). Authorized views are for access control, not performance. Scheduled queries have lag and cost." },
-      { text: "Multiple teams need access to centralized customer data in BigQuery. You want to minimize data duplication and operational overhead.", options: ["Ask each team to create authorized views. Grant bigquery.jobUser role.", "Publish data in BigQuery Analytics Hub. Direct teams to subscribe.", "Create a scheduled query to replicate customer data into each team project.", "Enable each team to create materialized views of the data they need."], correct: 1, explanation: "Analytics Hub creates an authorized dataset automatically at subscription time — zero duplication! bigquery.jobUser doesn't grant data access. Replicating data increases cost and maintenance." },
-      { text: "A Cloud KMS key protecting your Cloud Storage data was compromised. Re-encrypt all data, delete the old key, and reduce risk of future objects without CMEK. What do you do?", options: ["Rotate the Cloud KMS key version. Continue using the same bucket.", "Create new KMS key. Set as default CMEK on the existing bucket.", "Create new KMS key. New bucket. Copy objects specifying the new key in the copy command.", "Create new KMS key. New bucket with new key as default CMEK. Copy objects WITHOUT specifying a key."], correct: 3, explanation: "New bucket with default CMEK ensures ALL objects written to it (including copies) are protected automatically. Rotating doesn't re-encrypt existing data. Setting default on old bucket only protects future writes." },
-      { text: "You need to run SQL analytics on Cloud SQL data from BigQuery with minimum load on Cloud SQL. What approach do you use?", options: ["Migrate Cloud SQL data to BigQuery with Data Transfer Service", "Use BigQuery federated queries with Cloud SQL connector", "Create a Dataflow pipeline that reads Cloud SQL and writes to BigQuery periodically", "Use Serverless Spark to query BigQuery and Cloud SQL together"], correct: 1, explanation: "Federated queries let BigQuery query Cloud SQL directly via SQL with pushdown optimization — BigQuery sends the filter to Cloud SQL, minimizing load. Serverless Spark doesn't do efficient pushdown and uses high compute units." },
+      { text: "Você precisa fazer query numa tabela de 10TB filtrando pelos últimos 30 dias, agrupada por estado, cidade e loja. Como estruturar a tabela?", analogy: "🐉 O Dragão observa cada byte que você escaneia!", options: ["Partition por transaction_time; cluster por estado → cidade → store_id", "Partition por transaction_time; cluster por store_id → cidade → estado", "Cluster apenas por estado → cidade → store_id (sem partition)", "Cluster apenas por store_id → cidade → estado (sem partition)"], correct: 0, explanation: "Partition por tempo (elimina dados antigos do scan) + cluster do menor para maior cardinality (estado→cidade→store_id) corresponde aos padrões de filtro mais comuns." },
+      { text: "Sua ferramenta BI roda centenas de queries diárias agregando uma tabela de 50TB. Queries lentas e caras. Minimize tempo de resposta, custo e manutenção.", analogy: "🐉 O dragão cobra ouro por byte escaneado. Pré-cozinhe suas respostas!", options: ["Construa materialized views com agregações por dia e mês", "Construa authorized views com agregações por dia e mês", "Ative BI Engine e adicione a tabela como preferida", "Crie uma scheduled query para construir tabelas de agregação de hora em hora"], correct: 0, explanation: "Materialized views pré-agregam fisicamente. BI Engine cacheia tabelas de dimensão pequenas (não aguenta 50TB). Authorized views são para controle de acesso. Scheduled queries têm lag e custo." },
+      { text: "Vários times precisam de acesso a dados centralizados de clientes no BigQuery. Você quer minimizar duplicação e overhead operacional.", options: ["Peça a cada time para criar authorized views. Conceda bigquery.jobUser.", "Publique dados no BigQuery Analytics Hub. Direcione os times para assinar.", "Crie scheduled query para replicar dados em cada projeto.", "Permita que cada time crie materialized views dos dados que precisam."], correct: 1, explanation: "Analytics Hub cria authorized dataset automaticamente na assinatura — zero duplicação! bigquery.jobUser não concede acesso aos dados. Replicar aumenta custo e manutenção." },
+      { text: "Uma chave Cloud KMS protegendo dados no Cloud Storage foi comprometida. Re-encripte todos os dados, delete a chave antiga. O que fazer?", options: ["Rotacione a versão da chave Cloud KMS. Continue usando o mesmo bucket.", "Crie nova chave KMS. Configure como CMEK padrão no bucket existente.", "Crie nova chave KMS. Novo bucket. Copie objetos especificando a nova chave.", "Crie nova chave KMS. Novo bucket com CMEK padrão. Copie objetos SEM especificar chave."], correct: 3, explanation: "Novo bucket com CMEK padrão garante que TODOS os objetos escritos (incluindo cópias) sejam protegidos automaticamente. Rotacionar não re-encripta dados existentes." },
     ],
   },
   {
-    id: "dataflow",
-    name: "Streamhaven",
-    subtitle: "The River City",
-    emoji: "🌊",
-    color: "#00C9A7",
-    glow: "#00C9A730",
-    domain: "Dataflow — Processing & Streaming",
-    bossName: "The Watermark Hydra",
-    bossEmoji: "🐍",
-    bossDesc: "A many-headed beast — cut one delay and two more appear.",
+    id: "dataflow", name: "Streamhaven", subtitle: "The River City", emoji: "🌊",
+    color: "#00C9A7", glow: "#00C9A730", domain: "Dataflow — Processing & Streaming",
+    bossName: "The Watermark Hydra", bossEmoji: "🐍", bossDesc: "Corte uma cabeça de delay e duas mais aparecem.",
     locked: true,
     lessons: [
-      {
-        id: "df-1",
-        title: "Streaming vs Batch Processing",
-        icon: "🌊",
-        concept: "When to process data in real-time vs in chunks",
-        keyPoints: [
-          { label: "Batch (Dataflow)", text: "Process bounded datasets on a schedule. Good for ETL, historical analysis. Higher latency, lower cost." },
-          { label: "Streaming (Dataflow)", text: "Process unbounded streams continuously. Use for real-time analytics, fraud detection, IoT. Apache Beam model." },
-          { label: "Pub/Sub + Dataflow", text: "The golden combo: Pub/Sub buffers and scales ingestion; Dataflow processes with windowing, watermarks, and state." },
-          { label: "Dataproc vs Dataflow", text: "Dataproc = managed Spark/Hadoop (bring your own code). Dataflow = fully serverless, autoscaling, Apache Beam managed service." },
-        ],
-        analogy: "Batch is harvesting grain once a year. Streaming is a water mill running 24/7. Dataflow is the mill — you tell it how to grind (your Beam pipeline), it handles water levels (autoscaling) automatically.",
-        tip: "Exam key: 'serverless', 'autoscaling', 'streaming with windows' → Dataflow. 'Existing Spark/Hadoop jobs', 'Hive' → Dataproc.",
-      },
-      {
-        id: "df-2",
-        title: "Windows, Watermarks & Late Data",
-        icon: "⏱️",
-        concept: "Grouping streaming events by time",
-        keyPoints: [
-          { label: "Tumbling Windows (Fixed)", text: "Non-overlapping time windows. e.g., hourly aggregations. FixedWindows(Duration.standardHours(1))" },
-          { label: "Sliding Windows", text: "Overlapping windows. e.g., 'last 30 minutes, calculated every 5 minutes'." },
-          { label: "Watermarks", text: "A timestamp estimating 'how far behind' the pipeline is. Triggers when to close a window and emit results." },
-          { label: "AllowedLateness", text: "How long to wait for late-arriving events after the watermark. Late data outside this window is dropped." },
-        ],
-        analogy: "Imagine collecting rain in buckets per hour (tumbling window). The watermark is your assistant telling you 'I think all rain from 3pm is in the bucket now'. AllowedLateness = 'wait 5 more minutes just in case'.",
-        tip: "For 'aggregate events over hourly intervals from Pub/Sub' → always Dataflow streaming with tumbling windows. Cloud Functions CAN'T aggregate across time natively.",
-      },
-      {
-        id: "df-3",
-        title: "Dataflow Operations & Optimization",
-        icon: "🔧",
-        concept: "Running, updating, and debugging pipelines",
-        keyPoints: [
-          { label: "Job Update (Zero Downtime)", text: "Dataflow supports in-place job updates. Replace running pipeline with new version, state is preserved. No restart needed." },
-          { label: "Reshuffle", text: "Insert after merged steps to force Dataflow to separate them again — allows individual step metrics for bottleneck identification." },
-          { label: "Streaming Engine", text: "Moves window state off worker VMs to a managed backend. Reduces worker memory needs. Enable for large-scale streaming." },
-          { label: "Autoscaling", text: "Dataflow automatically adjusts worker count. Monitor via Dataflow console job graph + step metrics." },
-        ],
-        analogy: "Job Update is like a ship crew changing sails mid-ocean without stopping. Reshuffle is like forcing separate inspection checkpoints in an assembly line so you can see exactly which station is slow.",
-        tip: "Bottleneck identification: use Reshuffle to separate merged steps, then monitor per-step metrics in the Dataflow console. NOT logs — logs show errors, not throughput bottlenecks.",
-      },
+      { id: "df-1", title: "Streaming vs Batch", icon: "🌊", concept: "Quando processar em tempo real vs em lotes", keyPoints: [{ label: "Batch (Dataflow)", text: "Processa datasets limitados em um schedule. Bom para ETL, análise histórica. Maior latência, menor custo." }, { label: "Streaming (Dataflow)", text: "Processa streams contínuos. Use para analytics em tempo real, detecção de fraude, IoT." }, { label: "Pub/Sub + Dataflow", text: "A combinação de ouro: Pub/Sub bufferiza; Dataflow processa com windowing, watermarks e estado." }, { label: "Dataproc vs Dataflow", text: "Dataproc = Spark/Hadoop gerenciado (seu código). Dataflow = serverless, autoscaling, Apache Beam gerenciado." }], analogy: "Batch é colher grãos uma vez por ano. Streaming é um moinho d'água 24/7. Dataflow é o moinho — você define como moer, ele gerencia o nível da água (autoscaling).", tip: "Exame: 'serverless', 'autoscaling', 'streaming com janelas' → Dataflow. 'Jobs Spark/Hadoop existentes', 'Hive' → Dataproc." },
+      { id: "df-2", title: "Windows, Watermarks & Late Data", icon: "⏱️", concept: "Agrupando eventos de streaming por tempo", keyPoints: [{ label: "Tumbling Windows (Fixed)", text: "Janelas não sobrepostas. Ex: agregações horárias." }, { label: "Sliding Windows", text: "Janelas sobrepostas. Ex: 'últimos 30 min, calculado a cada 5 min'." }, { label: "Watermarks", text: "Timestamp estimando 'o quão atrasado' está o pipeline. Dispara quando fechar uma janela." }, { label: "AllowedLateness", text: "Quanto tempo esperar eventos tardios após o watermark." }], analogy: "Coletando chuva em baldes por hora (tumbling window). O watermark é seu assistente dizendo 'acho que toda chuva das 15h já está no balde'. AllowedLateness = 'espera mais 5 min por via das dúvidas'.", tip: "Para 'agregar eventos em intervalos horários do Pub/Sub' → sempre Dataflow streaming com tumbling windows." },
+      { id: "df-3", title: "Operações e Otimização", icon: "🔧", concept: "Executar, atualizar e debugar pipelines", keyPoints: [{ label: "Job Update (Zero Downtime)", text: "Dataflow suporta atualizações in-place. Substitui o pipeline em execução com nova versão, estado preservado." }, { label: "Reshuffle", text: "Insira após steps mesclados para forçar o Dataflow a separá-los — permite métricas individuais para identificar gargalos." }, { label: "Streaming Engine", text: "Move estado das janelas para fora das VMs workers para um backend gerenciado. Reduz necessidade de memória." }, { label: "Autoscaling", text: "Dataflow ajusta automaticamente a contagem de workers." }], analogy: "Job Update é como uma tripulação de navio trocando velas no meio do oceano sem parar. Reshuffle é forçar checkpoints separados em uma linha de montagem para ver qual estação está lenta.", tip: "Identificar gargalo: use Reshuffle para separar steps mesclados, depois monitore métricas por step no console Dataflow." },
     ],
     questions: [
-      { text: "A Dataflow streaming pipeline is processing slowly. The job graph was automatically merged into one step. How do you identify the bottleneck?", analogy: "🐍 The Hydra hides inside fused steps — you need to reveal her heads!", options: ["Check Cloud Logging for error messages on workers", "Insert a Reshuffle after each processing step; monitor execution details in the Dataflow console", "Increase the number of Dataflow workers", "Restart the job with more memory"], correct: 1, explanation: "Reshuffle prevents step fusion, making Dataflow show individual step metrics. The Dataflow console then reveals which step has the backlog. Logs show errors, not performance bottlenecks. Scaling workers without knowing the bottleneck may not help." },
-      { text: "You need to process events from Pub/Sub and aggregate over hourly intervals before loading to BigQuery. High event volume, must scale. What technology?", options: ["Cloud Function triggered by Pub/Sub per message", "Cloud Function scheduled hourly to pull Pub/Sub messages", "Dataflow batch job scheduled hourly", "Dataflow streaming job with tumbling windows of 1 hour"], correct: 3, explanation: "Dataflow streaming with FixedWindows(1h) is the only solution that: auto-scales horizontally, handles late data (allowedLateness), processes continuously (no batch lag), and writes aggregated results directly to BigQuery. Cloud Functions can't aggregate across time without external state." },
-      { text: "You developed a new Dataflow pipeline version (reading Pub/Sub → writing BigQuery). Current version uses 5-min windows and is in production. Deploy with zero downtime.", options: ["Stop the old job, wait for backlog to drain, start new job", "Use Dataflow job update to replace the running job", "Run new job in parallel, stop old one when new one stabilizes", "Use Cloud Composer to orchestrate the swap"], correct: 1, explanation: "Dataflow job update replaces the running job in-place, preserving worker state and not interrupting Pub/Sub processing. Stopping causes downtime. Running in parallel risks duplicate data in BigQuery." },
-      { text: "Pipeline must auto-scale with load, process each message at least once, and order messages within 1-hour windows. Which combination?", options: ["Apache Kafka + Cloud Dataproc", "Apache Kafka + Cloud Dataflow", "Cloud Pub/Sub + Cloud Dataproc", "Cloud Pub/Sub + Cloud Dataflow"], correct: 3, explanation: "Pub/Sub = serverless, auto-scaling ingestion. Dataflow = at-least-once semantics, 1h tumbling windows in event time, ordering by key, autoscaling. Kafka requires manual cluster management. Dataproc lacks native streaming windowing primitives." },
+      { text: "Um pipeline streaming do Dataflow está processando lentamente. O grafo foi automaticamente mesclado em um step. Como identificar o gargalo?", analogy: "🐍 A Hydra se esconde dentro de steps fundidos — você precisa revelar suas cabeças!", options: ["Verifique Cloud Logging para mensagens de erro nos workers", "Insira Reshuffle após cada step de processamento; monitore detalhes no console Dataflow", "Aumente o número de workers Dataflow", "Reinicie o job com mais memória"], correct: 1, explanation: "Reshuffle previne fusão de steps, fazendo o Dataflow mostrar métricas individuais. O console então revela qual step tem backlog." },
+      { text: "Você precisa processar eventos do Pub/Sub e agregar em intervalos horários antes de carregar no BigQuery. Alto volume, deve escalar. Qual tecnologia?", options: ["Cloud Function disparada por Pub/Sub por mensagem", "Cloud Function agendada de hora em hora para puxar mensagens Pub/Sub", "Dataflow batch job agendado de hora em hora", "Dataflow streaming job com tumbling windows de 1 hora"], correct: 3, explanation: "Dataflow streaming com FixedWindows(1h) é a única solução que: auto-escala, lida com dados tardios, processa continuamente e escreve resultados agregados direto no BigQuery." },
+      { text: "Nova versão do pipeline (lendo Pub/Sub → escrevendo BigQuery). Versão atual em produção. Deploy com zero downtime.", options: ["Pare o job antigo, espere o backlog drenar, inicie novo job", "Use Dataflow job update para substituir o job em execução", "Execute novo job em paralelo, pare o antigo quando estabilizar", "Use Cloud Composer para orquestrar a troca"], correct: 1, explanation: "Dataflow job update substitui o job em execução in-place, preservando estado dos workers e não interrompendo processamento do Pub/Sub." },
     ],
   },
   {
-    id: "pubsub",
-    name: "Signaltower",
-    subtitle: "The Messenger City",
-    emoji: "📡",
-    color: "#F7C948",
-    glow: "#F7C94830",
-    domain: "Pub/Sub — Ingestion & Messaging",
-    bossName: "The Ghost of Lost Messages",
-    bossEmoji: "👻",
-    bossDesc: "Messages that vanish in transit, never acknowledged, forever retried.",
+    id: "storage", name: "The Vault", subtitle: "City of Storage Secrets", emoji: "🗝️",
+    color: "#E05C5C", glow: "#E05C5C30", domain: "Storage & Security — IAM, Bigtable, Spanner",
+    bossName: "The Permission Thief", bossEmoji: "🦹", bossDesc: "Rouba acessos quando você menos espera. Sobre-permissões são sua arma.",
     locked: true,
     lessons: [
-      {
-        id: "ps-1",
-        title: "Pub/Sub Core Concepts",
-        icon: "📨",
-        concept: "How the messaging system works",
-        keyPoints: [
-          { label: "Topics & Subscriptions", text: "Publishers send to Topics. Subscribers pull from Subscriptions. Decoupled: many publishers, many subscribers." },
-          { label: "At-least-once delivery", text: "Pub/Sub guarantees each message is delivered at least once. Your consumer must be idempotent to handle duplicates." },
-          { label: "Dead Letter Queue (DLQ)", text: "Messages that fail after max retries go to a dead-letter topic. Critical for catching processing errors without losing data." },
-          { label: "Ordering Keys", text: "Messages with the same ordering key are delivered in order within that key. Useful for per-entity ordering." },
-        ],
-        analogy: "Pub/Sub is like a medieval postal system: your letter (message) goes to a central post office (topic). Any number of guilds (subscribers) can have a mailbox. The system guarantees delivery — if the messenger fails, they try again. DLQ = letters that couldn't be delivered go to a special drawer.",
-        tip: "Pub/Sub ordering: messages with the same ordering key are in order. BUT ordering keys reduce parallelism. Only use when truly needed.",
-      },
-      {
-        id: "ps-2",
-        title: "Pub/Sub + Dataflow Patterns",
-        icon: "🔗",
-        concept: "Common architectures on the exam",
-        keyPoints: [
-          { label: "Pub/Sub → Dataflow → BigQuery", text: "The most common streaming pattern. Pub/Sub ingests; Dataflow transforms, validates, aggregates; BigQuery stores for analytics." },
-          { label: "Pub/Sub → BigQuery Direct", text: "For simple no-transform scenarios. Pub/Sub has a native BigQuery subscription — no code needed." },
-          { label: "Pub/Sub → Cloud Storage (Archive)", text: "For raw data archiving. Dataflow writes to both BigQuery (analytics) and Cloud Storage (long-term, cost-efficient)." },
-          { label: "DLQ Pattern", text: "Dataflow routes invalid/failed records to a dead-letter Pub/Sub topic for manual review or reprocessing." },
-        ],
-        analogy: "Think of it as an assembly line: Pub/Sub is the loading dock (receives all raw materials). Dataflow is the factory floor (cleans, sorts, transforms). BigQuery is the warehouse (ready for use). Cloud Storage is the archive room (keep everything forever, cheaply).",
-        tip: "For 'decouple producers and consumers + near real-time SQL + cost-efficient raw storage' → Pub/Sub + Dataflow → BigQuery + Cloud Storage (in Avro format).",
-      },
-      {
-        id: "ps-3",
-        title: "Security & Change Data Capture",
-        icon: "🔒",
-        concept: "Securing Pub/Sub and migrating operational data",
-        keyPoints: [
-          { label: "VPC Service Controls", text: "Creates a security perimeter around a PROJECT (not VPC). Prevents data exfiltration from Pub/Sub to other projects. Pub/Sub is serverless — firewall rules have no effect on it." },
-          { label: "Why not IAM Conditions?", text: "IAM conditions don't support project_id in Pub/Sub. Users don't 'belong' to projects. VPC-SC is the correct tool." },
-          { label: "Datastream (CDC)", text: "Serverless Change Data Capture service. Replicates from Oracle/MySQL/PostgreSQL to BigQuery continuously. No VMs to manage." },
-          { label: "Kafka vs Pub/Sub", text: "Kafka requires VM clusters (Zookeeper, brokers). Pub/Sub is fully managed. Exam prefers Pub/Sub when 'minimize infrastructure management' is a requirement." },
-        ],
-        analogy: "VPC Service Controls is like a magical forcefield around the kingdom that blocks any message from leaving — even if someone inside wanted to share secrets with the neighboring kingdom. Firewalls only block the gates, but wizards (serverless services) teleport over walls.",
-        tip: "Datastream = serverless CDC. Debezium/Kafka Connect = requires VMs. When the exam says 'minimize infrastructure management' for CDC → Datastream wins.",
-      },
+      { id: "st-1", title: "Escolhendo o Storage Certo", icon: "🗄️", concept: "Qual serviço GCP de storage para qual caso de uso", keyPoints: [{ label: "BigQuery", text: "Data warehouse analítico. Escala petabytes. SQL. Alta latência por linha única. NÃO para serving <100ms." }, { label: "Bigtable", text: "NoSQL wide-column. Latência milissegundos. Para time-series, IoT, serving de predições ML. Design do row key é CRÍTICO." }, { label: "Cloud SQL", text: "Relacional gerenciado (MySQL/PostgreSQL). Para OLTP transacional. Escala limitada vs Spanner." }, { label: "Cloud Spanner", text: "Relacional distribuído globalmente. Transações ACID em escala. Para OLTP global. Mais caro que Cloud SQL." }], analogy: "BigQuery = arquivo real (ótimo para pesquisa, lento para buscar um pergaminho). Bigtable = serviço de entrega expressa (instantâneo, organizado por destinatário). Spanner = tesouro do império (global, sempre consistente, caro).", tip: "Padrão do exame: 'servir predições ML com latência <100ms' → Bigtable (NÃO BigQuery). 'Transações ACID globais' → Spanner." },
+      { id: "st-2", title: "Bigtable Row Key Design", icon: "🔑", concept: "O conceito mais importante no Bigtable", keyPoints: [{ label: "Hotspotting", text: "Se row keys são monotonicamente crescentes (como timestamps), todas as escritas vão para UM servidor tablet → gargalo." }, { label: "Fix: Reverse timestamps", text: "Use timestamps invertidos para que dados recentes não se aglomerem no mesmo extremo." }, { label: "Regra: Prefixo de alta cardinalidade", text: "Comece keys com a entidade que você mais consulta (símbolo de ação, user_id). Depois timestamp. Ex: AAPL#1234567890" }, { label: "Salt/Hash", text: "Para chaves 'quentes', adicione prefixo aleatório (salting) para distribuir escritas entre tablets." }], analogy: "Se você organiza uma biblioteca por 'data de adição' — todos os livros DE HOJE se empilham na mesa de um bibliotecário. Caos! Em vez disso, ordene por AUTOR primeiro, depois data.", tip: "Armadilha clássica: 'datetime como início do row key causa degradação de performance com milhares de usuários' → SEMPRE mude para começar com o identificador da entidade." },
+      { id: "st-3", title: "IAM & Encryption", icon: "🛡️", concept: "Protegendo dados no GCP", keyPoints: [{ label: "Princípio do Menor Privilégio", text: "Conceda permissões mínimas necessárias. dataViewer (só leitura) vs dataEditor vs admin." }, { label: "CMEK vs CSEK vs EKM", text: "CMEK = chave no Cloud KMS. CSEK = você fornece a chave por requisição. EKM = chave fica no SEU HSM externo, nunca sai." }, { label: "Cloud DLP", text: "Detecte e de-identifique PII. Use CryptoDeterministicConfig para tokenização que preserva capacidade de JOIN." }, { label: "VPC Service Controls", text: "Perímetro de segurança ao redor de projetos. Previne exfiltração de dados para serviços suportados." }], analogy: "EKM é como um hotel que te deixa usar seu próprio cadeado — o hotel pode abrir a forma da fechadura, mas a chave real nunca sai do seu chaveiro. O material da chave NUNCA vai para o Google.", tip: "Para PII em múltiplos datasets que precisam de JOIN: CryptoDeterministicConfig (format-preserving, determinístico)." },
     ],
     questions: [
-      { text: "Project A has a Pub/Sub topic with confidential data. You need to ensure Project B and all future projects cannot access it. What do you do?", analogy: "👻 The ghost is leaking secrets to neighboring kingdoms!", options: ["Configure VPC Service Controls with a perimeter around Project A", "Configure VPC Service Controls with a perimeter around the VPC of Project A", "Add firewall rules in Project A to allow only Project A VPC traffic", "Use IAM conditions so only Project A users access Project A resources"], correct: 0, explanation: "VPC-SC creates a perimeter around the PROJECT and supports Pub/Sub. Firewall rules and VPC perimeters don't affect serverless services. IAM conditions don't support project_id in Pub/Sub." },
-      { text: "Your app generates 150 GB/day of JSON (growing). Requirements: decouple producers/consumers, raw storage indefinitely (cost-efficient), near real-time SQL, 2+ years SQL-accessible history.", options: ["API + polling tool → Cloud Storage as gzipped JSON", "Write to Cloud SQL + periodic exports to Cloud Storage and BigQuery", "Pub/Sub + Spark on Dataproc → Avro on HDFS on Persistent Disk", "Pub/Sub + Dataflow that transforms JSON→Avro → Cloud Storage AND BigQuery"], correct: 3, explanation: "Pub/Sub decouples. Dataflow transforms JSON→Avro (compact + schema). Dual write: Cloud Storage (indefinite cheap archive) + BigQuery (SQL, near real-time, 2yr history). HDFS on PD is expensive. Cloud SQL doesn't scale for analytics." },
-      { text: "You need to replicate and continuously sync 50 Oracle tables (on a VM in a VPC) to BigQuery, minimizing infrastructure management.", options: ["Deploy Kafka in the VPC + Kafka Connect Oracle CDC + BigQuery Sink Connector", "Deploy Kafka in the VPC + Kafka Connect Oracle CDC + Dataflow to BigQuery", "Create a Datastream service Oracle→BigQuery with private connectivity to the VPC", "Pub/Sub subscription + Debezium Oracle connector to capture changes"], correct: 2, explanation: "Datastream is a serverless CDC service — no VMs to manage! Private connectivity reaches the Oracle VM in the VPC. Kafka requires VM clusters. Debezium needs a VM. Serverless = minimum infrastructure." },
+      { text: "Você tem um modelo BigQuery ML. Uma aplicação precisa servir predições por user_id com latência <100ms. Qual arquitetura?", analogy: "🦹 O ladrão é lento — e a latência do BigQuery vai roubar seu SLA!", options: ["Adicione filtro WHERE user_id=? na query BigQuery ML. Conceda BigQuery Data Viewer.", "Crie authorized view. Compartilhe o dataset com a service account.", "Pipeline Dataflow lê resultados BigQuery ML. Conceda Dataflow Worker role.", "Dataflow lê predições do BigQuery ML → escreve no Bigtable (user_id como row key) → app lê do Bigtable."], correct: 3, explanation: "Latência do BigQuery regularmente excede 100ms para lookups de linha única. Pré-compute predições com Dataflow, armazene no Bigtable (user_id como row key = lookups O(1) <10ms), app lê do Bigtable." },
+      { text: "Armazene dados de trade de ações no Bigtable. Datetime é o início do row key. Milhares de usuários simultâneos. Performance degrada conforme mais dados são adicionados. Corrija.", options: ["Mude row key para começar com o símbolo da ação", "Mude row key para começar com número aleatório por segundo", "Migre dados para BigQuery", "Adicione mais nós Bigtable"], correct: 0, explanation: "Datetime como chave causa hotspotting: todas as escritas recentes vão para um servidor tablet. Começar com símbolo da ação distribui escritas pelos símbolos (prefixo de alta cardinalidade)." },
     ],
   },
   {
-    id: "storage",
-    name: "The Vault",
-    subtitle: "City of Storage Secrets",
-    emoji: "🗝️",
-    color: "#E05C5C",
-    glow: "#E05C5C30",
-    domain: "Storage & Security — IAM, Bigtable, Spanner",
-    bossName: "The Permission Thief",
-    bossEmoji: "🦹",
-    bossDesc: "Steals access when you least expect it. Over-permissions are its weapon.",
+    id: "composer", name: "Pipeforge", subtitle: "The Automation Citadel", emoji: "⚙️",
+    color: "#A259FF", glow: "#A259FF30", domain: "Cloud Composer, Dataproc & Automação",
+    bossName: "The Broken Pipeline Golem", bossEmoji: "🤖", bossDesc: "Construído de DAGs falhos e jobs não monitorados. Nunca para.",
     locked: true,
     lessons: [
-      {
-        id: "st-1",
-        title: "Choosing the Right Storage",
-        icon: "🗄️",
-        concept: "Which GCP storage service for which use case",
-        keyPoints: [
-          { label: "BigQuery", text: "Analytics warehouse. Petabyte scale. SQL. High latency per single row. NOT for <100ms serving." },
-          { label: "Bigtable", text: "NoSQL wide-column. Millisecond latency. Millions of reads/writes/sec. For time-series, IoT, serving ML predictions. Row key design is CRITICAL." },
-          { label: "Cloud SQL", text: "Managed relational (MySQL/PostgreSQL). For transactional OLTP. Limited scale vs Spanner." },
-          { label: "Cloud Spanner", text: "Globally distributed relational. ACID transactions at scale. For global OLTP. More expensive than Cloud SQL." },
-        ],
-        analogy: "BigQuery = the royal archives (great for research, slow to fetch one scroll). Bigtable = the speed courier post (instant delivery, organized by recipient name). Cloud SQL = the village accountant (reliable, limited scale). Spanner = the empire-wide treasury (global, always consistent, expensive).",
-        tip: "Exam pattern: 'serve ML predictions with <100ms latency' → Bigtable (NOT BigQuery). 'Global ACID transactions' → Spanner. 'PostgreSQL compatibility, minimize cost' → Cloud SQL.",
-      },
-      {
-        id: "st-2",
-        title: "Bigtable Row Key Design",
-        icon: "🔑",
-        concept: "The most important concept in Bigtable — gets its own lesson!",
-        keyPoints: [
-          { label: "Hotspotting", text: "If row keys are monotonically increasing (like timestamps), all writes go to ONE tablet server → performance bottleneck." },
-          { label: "Fix: Reverse timestamps", text: "Use reversed timestamps so recent data doesn't cluster at the same end. Or use symbol/entity as key prefix." },
-          { label: "Rule: High-cardinality prefix", text: "Start keys with the entity you query most (stock symbol, user_id). Then timestamp. e.g., AAPL#1234567890" },
-          { label: "Salt/Hash", text: "For 'hot' keys, add a random prefix (salting) to distribute writes across tablets." },
-        ],
-        analogy: "If you organize a library by 'date added' — all TODAY's books pile up at one librarian's desk. Chaos! Instead, sort by AUTHOR first, then date. Each librarian gets an equal share. That's why Bigtable wants entity+timestamp, not just timestamp.",
-        tip: "Classic exam trap: 'datetime as the start of the row key causes performance degradation with thousands of users' → ALWAYS change to start with the entity identifier (stock symbol, user_id, etc.).",
-      },
-      {
-        id: "st-3",
-        title: "IAM & Encryption",
-        icon: "🛡️",
-        concept: "Securing data in GCP",
-        keyPoints: [
-          { label: "Principle of Least Privilege", text: "Grant minimum permissions needed. bigquery.dataViewer (read only) vs bigquery.dataEditor vs bigquery.admin." },
-          { label: "CMEK vs CSEK vs EKM", text: "CMEK = key in Cloud KMS (Google-managed infra). CSEK = you provide key per request. EKM = key stays on YOUR external HSM, never leaves." },
-          { label: "Cloud DLP", text: "Detect and de-identify PII. Use CryptoDeterministicConfig for tokenization that preserves JOIN capability across datasets." },
-          { label: "VPC Service Controls", text: "Security perimeter around projects. Prevents data exfiltration for supported services (BigQuery, Pub/Sub, GCS, etc.)." },
-        ],
-        analogy: "EKM is like a hotel that lets you use your own padlock — the hotel staff can open your room door shape, but the actual key that unlocks it never leaves your keychain. The key material NEVER goes to Google.",
-        tip: "For PII across multiple datasets that needs JOIN: CryptoDeterministicConfig (format-preserving, deterministic). For irreversible anonymization: CryptoHashConfig. For display-only masking: BigQuery Dynamic Data Masking.",
-      },
+      { id: "cp-1", title: "Cloud Composer & Airflow DAGs", icon: "🎼", concept: "Orquestrando pipelines de dados complexos", keyPoints: [{ label: "DAG (Directed Acyclic Graph)", text: "Uma definição de workflow no Airflow/Composer. Define tasks e dependências. Sem ciclos permitidos." }, { label: "BigQueryInsertJobOperator", text: "O operador correto para executar queries SQL no BigQuery a partir do Composer. Suporta retry e email_on_failure." }, { label: "BigQueryUpsertTableOperator", text: "Para criar/atualizar PROPRIEDADES de tabelas (schema, metadata). NÃO para executar queries." }, { label: "Parâmetros chave", text: "retry=3 (tenta 3 vezes), email_on_failure=True (envia email se todas as tentativas falharem)." }], analogy: "Um DAG é como uma receita culinária para o banquete do reino: primeiro reúna ingredientes (task 1), depois prepare (task 2), depois cozinhe (task 3). Se um passo falhar, tente até 3 vezes.", tip: "Armadilha: BigQuery Scheduled Queries não têm opções de retry. Para retry + email_on_failure → deve usar Cloud Composer com BigQueryInsertJobOperator." },
+      { id: "cp-2", title: "Dataproc — Spark & Hadoop Gerenciados", icon: "⚡", concept: "Quando usar Dataproc vs outras opções", keyPoints: [{ label: "Pontos fortes do Dataproc", text: "Spark/Hadoop gerenciado. Lift-and-shift de jobs existentes. Spin-up mais rápido que on-prem. Integra com conector GCS." }, { label: "Ephemeral vs Persistent clusters", text: "Ephemeral: suba para um job, depois encerre (econômico). Persistent: para jobs interativos frequentes e curtos." }, { label: "Jobs intensivos em I/O", text: "Para jobs Hadoop intensivos em disco no Dataproc: armazene dados intermediários no HDFS NATIVO (Persistent Disk), não Cloud Storage. GCS adiciona latência de rede." }, { label: "Quando NÃO Dataproc", text: "Para pipelines serverless → Dataflow. Para transformações SQL → BigQuery. Para jobs agendados simples → Cloud Composer + BigQuery." }], analogy: "Dataproc é como alugar uma equipe de forjadores que sabe trabalhar com SUAS ferramentas existentes. O conector Cloud Storage é ótimo para o armazém final, mas para metalurgia intermediária quente — mantenha na forja local (HDFS nativo) para velocidade.", tip: "Job Hadoop intensivo em I/O mais lento no Dataproc que on-prem? → Aloque mais Persistent Disk, armazene dados intermediários no HDFS local. Latência de rede para GCS é o culpado." },
+      { id: "cp-3", title: "Governança & Migração de Dados", icon: "🗺️", concept: "Gerenciando dados em escala e movendo para GCP", keyPoints: [{ label: "Dataplex", text: "Camada unificada de governança. Gerencia dados ONDE ESTÃO (sem migração). Auto-descoberta, linhagem de dados, validação de qualidade." }, { label: "Transfer Appliance", text: "Dispositivo físico para transferir 1 PB+ para GCP em horas/dias." }, { label: "Database Migration Service", text: "Para migrar bancos de dados (MySQL, PostgreSQL, SQL Server, Oracle) para Cloud SQL ou AlloyDB." }, { label: "Datastream", text: "CDC serverless para replicação contínua. Não migração única — sync contínuo de Oracle/MySQL/PostgreSQL." }], analogy: "Dataplex é um cartógrafo real que mapeia todos os tesouros do reino (dados) sem movê-los — apenas cria um catálogo mestre. Transfer Appliance é enviar um baú de ouro por carruagem blindada em vez de enviar moedas uma a uma (internet).", tip: "Migração de 1 PB em 'algumas horas' → Transfer Appliance. Replicação CDC contínua com infra mínima → Datastream. Descoberta + linhagem + qualidade em um lugar → Dataplex." },
     ],
     questions: [
-      { text: "You have a BigQuery ML model. An application needs to serve predictions per user_id with <100ms latency. What's your architecture?", analogy: "🦹 The thief is slow — and BigQuery latency will steal your SLA!", options: ["Add WHERE user_id=? filter in BigQuery ML query. Grant BigQuery Data Viewer.", "Create an authorized view. Share the dataset with the app service account.", "Dataflow pipeline reads BigQuery ML results. Grant Dataflow Worker role to app.", "Dataflow reads predictions from BigQuery ML → writes to Bigtable (user_id as row key) → app reads from Bigtable with Bigtable Reader role."], correct: 3, explanation: "BigQuery latency (planning + slots + cold cache) regularly exceeds 100ms for single-row lookups. Pre-compute predictions with Dataflow, store in Bigtable (user_id as row key = O(1) lookups <10ms), app reads from Bigtable. Decouple inference from serving." },
-      { text: "Store stock trade data in Bigtable. Datetime is the start of the row key. Thousands of concurrent users. Performance degrades as more data is added. Fix it.", options: ["Change row key to start with stock symbol", "Change row key to start with a random number per second", "Migrate data to BigQuery instead", "Add more Bigtable nodes"], correct: 0, explanation: "Datetime-as-key causes hotspotting: all recent writes land on one tablet server. Starting with stock symbol distributes writes across symbols (high cardinality prefix). Random-per-second works but loses query ability. More nodes help temporarily but don't fix the design." },
-      { text: "You must encrypt BigQuery data with a key generated and stored ONLY on your on-premises HSM. Use Google-managed solutions. What do you do?", options: ["Create key in on-prem HSM, import into Cloud KMS. Associate with BigQuery.", "Create key in on-prem HSM, import into Cloud HSM. Associate with BigQuery.", "Create key in on-prem HSM, link to Cloud External Key Manager (EKM). Associate the Cloud KMS key with BigQuery.", "Create key in on-prem HSM. Encrypt data before ingesting into BigQuery."], correct: 2, explanation: "Cloud EKM keeps the key material on YOUR HSM — it never moves to Google infrastructure. You link it via Cloud KMS reference and associate with BigQuery. Importing to Cloud KMS/HSM MOVES the key to Google's infrastructure, violating the 'only on-prem HSM' requirement." },
+      { text: "Você precisa executar uma transformação SQL no BigQuery com até 3 retentativas e notificação por email se todas falharem. Qual solução?", analogy: "🤖 O Golem quebra cada pipeline. Você precisa de um engenheiro que tente 3 vezes antes de pedir ajuda!", options: ["BigQuery scheduled query com notificação Pub/Sub após falha", "BigQueryUpsertTableOperator no Cloud Composer, retry=3, email_on_failure=True", "BigQuery scheduled query + Cloud Run function para enviar email após 3 falhas", "BigQueryInsertJobOperator no Cloud Composer, retry=3, email_on_failure=True"], correct: 3, explanation: "BigQueryInsertJobOperator executa transformações SQL no BigQuery. Com retry=3 e email_on_failure=True, tenta 3 vezes e depois envia email. BigQuery scheduled queries não têm opções de retry. BigQueryUpsertTableOperator é para schema/propriedades de tabela." },
+      { text: "Você precisa migrar 1 PB de dados de um datacenter on-premises para Google Cloud. A migração deve completar em algumas horas com conexão segura. Melhor prática?", options: ["gsutil com upload paralelo pela internet", "Cloud VPN + Storage Transfer Service", "Transfer Appliance", "Dedicated Interconnect + gsutil"], correct: 2, explanation: "Transfer Appliance é um dispositivo físico para transferência em larga escala (centenas de TB a PB) em horas. Fazer upload de 1 PB pela internet levaria semanas mesmo com Dedicated Interconnect." },
     ],
   },
   {
-    id: "composer",
-    name: "Pipeforge",
-    subtitle: "The Automation Citadel",
-    emoji: "⚙️",
-    color: "#A259FF",
-    glow: "#A259FF30",
-    domain: "Cloud Composer, Dataproc & Automation",
-    bossName: "The Broken Pipeline Golem",
-    bossEmoji: "🤖",
-    bossDesc: "A construct built from failed DAGs and unmonitored jobs. It never stops.",
+    id: "vertex", name: "Neuralspire", subtitle: "The AI Citadel", emoji: "🧠",
+    color: "#EC4899", glow: "#EC489930", domain: "Vertex AI & Machine Learning",
+    bossName: "The Overfit Oracle", bossEmoji: "🔮", bossDesc: "Um oráculo que memoriza tudo mas não generaliza nada.",
     locked: true,
     lessons: [
-      {
-        id: "cp-1",
-        title: "Cloud Composer & Airflow DAGs",
-        icon: "🎼",
-        concept: "Orchestrating complex data pipelines",
-        keyPoints: [
-          { label: "DAG (Directed Acyclic Graph)", text: "A workflow definition in Airflow/Composer. Defines tasks and dependencies. No cycles allowed." },
-          { label: "BigQueryInsertJobOperator", text: "The correct operator to run SQL queries on BigQuery from Composer. Supports retry and email_on_failure." },
-          { label: "BigQueryUpsertTableOperator", text: "For creating/updating table PROPERTIES (schema, metadata). NOT for running queries." },
-          { label: "Key parameters", text: "retry=3 (try 3 times), email_on_failure=True (send email if all retries fail). Set on the operator level." },
-        ],
-        analogy: "A DAG is like a cooking recipe for the kingdom's feast: first gather ingredients (task 1), then prep (task 2), then cook (task 3). If one step fails, retry up to 3 times. If all fail, send a raven (email) to the chef.",
-        tip: "Exam trap: BigQuery Scheduled Queries have NO retry options. For retry + email_on_failure → must use Cloud Composer with BigQueryInsertJobOperator.",
-      },
-      {
-        id: "cp-2",
-        title: "Dataproc — Managed Spark & Hadoop",
-        icon: "⚡",
-        concept: "When to use Dataproc vs other options",
-        keyPoints: [
-          { label: "Dataproc strengths", text: "Managed Spark/Hadoop. Lift-and-shift existing jobs. Faster cluster spin-up than on-prem. Integrates with GCS connector." },
-          { label: "Ephemeral vs Persistent clusters", text: "Ephemeral: spin up for a job, then shut down (cost-efficient). Persistent: for frequent, short interactive jobs." },
-          { label: "I/O intensive jobs", text: "For disk I/O intensive Hadoop jobs on Dataproc: store intermediate data on NATIVE HDFS (Persistent Disk), not Cloud Storage. GCS adds network latency." },
-          { label: "When NOT Dataproc", text: "For serverless, no-code pipelines → Dataflow. For SQL transformations → BigQuery. For simple scheduled jobs → Cloud Composer + BigQuery." },
-        ],
-        analogy: "Dataproc is like renting a forge crew that knows how to work YOUR existing tools. Cloud Storage connector is great for the final materials warehouse, but for hot intermediate metalwork — keep it at the local forge (native HDFS) for speed.",
-        tip: "I/O intensive Hadoop job slower on Dataproc than on-prem? → Allocate more Persistent Disk, store intermediate data on local HDFS. Network latency to GCS is the culprit.",
-      },
-      {
-        id: "cp-3",
-        title: "Data Governance & Migration",
-        icon: "🗺️",
-        concept: "Managing data at scale and moving data to GCP",
-        keyPoints: [
-          { label: "Dataplex", text: "Unified data governance layer. Manages data WHERE IT IS (no migration). Auto-discovery, data lineage, quality validation. Decentralized data mesh." },
-          { label: "Transfer Appliance", text: "Physical device for transferring 1 PB+ to GCP in hours/days. When internet bandwidth would take weeks." },
-          { label: "Database Migration Service", text: "For migrating databases (MySQL, PostgreSQL, SQL Server, Oracle) to Cloud SQL or AlloyDB." },
-          { label: "Datastream", text: "Serverless CDC for ongoing replication. Not one-time migration — continuous sync from Oracle/MySQL/PostgreSQL." },
-        ],
-        analogy: "Dataplex is a royal cartographer who maps all the kingdom's treasures (data) without moving them — just creates a master catalog. Transfer Appliance is shipping a chest of gold by armored carriage (physical device) instead of couriering coins one by one (internet).",
-        tip: "1 PB migration in 'a few hours' → Transfer Appliance. Ongoing CDC replication with minimum infra → Datastream. Data discovery + lineage + quality in one place → Dataplex.",
-      },
+      { id: "vx-1", title: "Overfitting & Regularização", icon: "📊", concept: "Quando seu modelo memoriza em vez de aprender", keyPoints: [{ label: "Overfitting", text: "O modelo aprende os dados de treino tão bem que falha em dados novos. Alta acurácia no treino, baixa no teste." }, { label: "Soluções", text: "Mais dados de treino, menos features, aumentar regularização (L1/L2), usar dropout em redes neurais." }, { label: "L1 vs L2", text: "L1 (Lasso) = esparsidade, zera features irrelevantes. L2 (Ridge) = penaliza pesos grandes, mais suave." }, { label: "Dropout", text: "Desativa aleatoriamente neurônios durante treino, forçando o modelo a aprender representações mais robustas." }], analogy: "Overfitting é como estudar para a prova memorizando todas as respostas do gabarito antigo. Você passa naquele teste específico, mas falha em qualquer variação das questões.", tip: "Exame: 'modelo com boa acurácia no treino mas ruim no teste' → overfitting. Soluções: mais dados, menos features, mais regularização, dropout." },
+      { id: "vx-2", title: "Feature Engineering", icon: "⚙️", concept: "Transformando dados brutos em features úteis", keyPoints: [{ label: "Feature Crosses", text: "Combine duas ou mais features para criar interações. Ex: latitude × longitude para localização geográfica." }, { label: "Bucketização", text: "Converta features contínuas em categorias discretas para capturar relações não-lineares." }, { label: "Embedding", text: "Represente categorias de alta cardinalidade como vetores densos de dimensão menor." }, { label: "Normalização", text: "Escale features para o mesmo range (0-1 ou z-score) para evitar que features grandes dominem." }], analogy: "Feature engineering é como preparar ingredientes antes de cozinhar. Você pode ter os melhores ingredientes (dados brutos), mas precisa cortá-los, temperá-los e prepará-los corretamente para que o prato (modelo) fique bom.", tip: "Para dados com fronteiras circulares/radiais em 2D (X,Y) com classificação por círculos: feature sintética X²+Y² captura a separação radial que um algoritmo linear não consegue." },
     ],
     questions: [
-      { text: "You need to run a SQL transformation on BigQuery with up to 3 retries and email notification if all fail. What solution?", analogy: "🤖 The Golem breaks every pipe. You need an engineer who tries 3 times before calling for help!", options: ["BigQuery scheduled query with Pub/Sub notification after failure", "BigQueryUpsertTableOperator in Cloud Composer, retry=3, email_on_failure=True", "BigQuery scheduled query + Cloud Run function to send email after 3 failures", "BigQueryInsertJobOperator in Cloud Composer, retry=3, email_on_failure=True"], correct: 3, explanation: "BigQueryInsertJobOperator runs SQL transformations in BigQuery. With retry=3 and email_on_failure=True, it retries 3 times then sends email. BigQuery scheduled queries have NO retry options. BigQueryUpsertTableOperator is for table schema/properties, not query execution." },
-      { text: "You need to migrate 1 PB of data from an on-premises datacenter to Google Cloud. Migration must complete in a few hours with a secure connection. Best practice?", options: ["gsutil with parallel upload over the internet", "Cloud VPN + Storage Transfer Service", "Transfer Appliance", "Dedicated Interconnect + gsutil"], correct: 2, explanation: "Transfer Appliance is a physical device for large-scale data transfer (hundreds of TBs to PBs) in hours. Uploading 1 PB over internet would take weeks even with Dedicated Interconnect. Transfer Appliance is Google's recommended practice for this scale and time constraint." },
-      { text: "A disk I/O intensive Hadoop job runs significantly slower on Cloud Dataproc than on bare-metal (8 cores, 100GB RAM). You're using Cloud Storage connector. Fix?", options: ["Allocate more memory so intermediate data stays in RAM", "Allocate more Persistent Disk; store intermediate data on native HDFS", "Allocate more CPU cores to increase network bandwidth per instance", "Switch all data to Cloud Storage connector for all operations"], correct: 1, explanation: "I/O intensive jobs are penalized by Cloud Storage network latency. Storing intermediate data on local HDFS (Persistent Disk) eliminates network round-trips. Input/output data can stay on GCS (for separation of storage/compute), but intermediate data needs local disk." },
-      { text: "Healthcare data is spread across various storage services managed by different owners. Discovery and management is difficult. Need: data discovery, lineage tracking, quality validation. Cost-optimized.", options: ["Build a custom data discovery tool on GKE", "Use BigLake to convert everything to a data lake", "Use Dataplex to manage data, track lineage, and perform quality validation", "Use BigQuery for lineage tracking and Dataprep for data management and quality"], correct: 2, explanation: "Dataplex manages data WHERE IT LIVES (no migration required). It automates discovery, tracks lineage, and validates quality — all in one managed service. GKE custom tool is time-consuming and expensive. BigLake conversion is disruptive. BigQuery+Dataprep doesn't cover end-to-end lineage." },
+      { text: "Você está treinando um classificador de spam. Você nota que está overfitting nos dados de treino. Quais três ações podem resolver o problema? (Escolha três)", options: ["Obtenha mais exemplos de treino", "Reduza o número de exemplos de treino", "Use um conjunto menor de features", "Use um conjunto maior de features", "Aumente os parâmetros de regularização", "Diminua os parâmetros de regularização"], correct: 0, explanation: "Para resolver overfitting: (A) Mais dados de treino ajudam o modelo a generalizar. (C) Menos features reduz complexidade. (E) Mais regularização penaliza pesos grandes. Reduzir dados ou features aumenta overfitting. Diminuir regularização também piora." },
+      { text: "Você tem dados em 2D (X,Y) onde a cor de cada ponto representa sua classe. Os dados formam padrões circulares. Você quer classificar usando um algoritmo linear. Qual feature sintética adicionar?", options: ["X²+Y²", "X²", "Y²", "cos(X)"], correct: 0, explanation: "X²+Y² representa a distância ao quadrado da origem. Para dados separados radialmente (círculos concêntricos), isso cria uma nova dimensão onde os dados se tornam linearmente separáveis." },
     ],
   },
 ];
 
-// ═══════════════════════════════════════════════════════════
-// UTILITY
-// ═══════════════════════════════════════════════════════════
 const XP_LESSON = 50;
 const XP_CORRECT = 100;
 const XP_WRONG = 15;
 
+// ═══════════════════════════════════════════════════════════
+// UTILITY COMPONENTS
+// ═══════════════════════════════════════════════════════════
 function Stars() {
   const s = Array.from({ length: 100 }, (_, i) => ({
     id: i, x: Math.random() * 100, y: Math.random() * 100,
@@ -348,7 +111,6 @@ function Stars() {
       {s.map(({ id, x, y, sz, d, dur }) => (
         <div key={id} style={{ position: "absolute", left: `${x}%`, top: `${y}%`, width: sz, height: sz, borderRadius: "50%", background: "#fff", animation: `twkl ${dur}s ${d}s infinite alternate` }} />
       ))}
-      {/* Nebula clouds */}
       <div style={{ position: "absolute", width: "40vw", height: "40vw", borderRadius: "50%", background: "radial-gradient(circle, #0d1b4e44 0%, transparent 70%)", top: "10%", left: "60%", filter: "blur(40px)" }} />
       <div style={{ position: "absolute", width: "30vw", height: "30vw", borderRadius: "50%", background: "radial-gradient(circle, #1a0d3a44 0%, transparent 70%)", bottom: "20%", left: "10%", filter: "blur(60px)" }} />
     </div>
@@ -362,7 +124,7 @@ function XPBar({ xp, level }) {
     <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
       <span style={{ color: "#F7C948", fontSize: 11, fontWeight: 700, fontFamily: "monospace", whiteSpace: "nowrap" }}>Lv.{level}</span>
       <div style={{ flex: 1, height: 6, background: "#0a0f1e", borderRadius: 99, overflow: "hidden", border: "1px solid #1a2040" }}>
-        <div style={{ height: "100%", width: `${(cur / needed) * 100}%`, background: "linear-gradient(90deg, #F7C948, #f97316)", borderRadius: 99, transition: "width 0.8s ease", boxShadow: "0 0 8px #F7C94866" }} />
+        <div style={{ height: "100%", width: `${(cur / needed) * 100}%`, background: "linear-gradient(90deg, #F7C948, #f97316)", borderRadius: 99, transition: "width 0.8s ease" }} />
       </div>
       <span style={{ color: "#374151", fontSize: 10, fontFamily: "monospace" }}>{xp}xp</span>
     </div>
@@ -370,62 +132,75 @@ function XPBar({ xp, level }) {
 }
 
 // ═══════════════════════════════════════════════════════════
-// SCREENS
+// CHARACTER SELECT — mostra as duas opções direto
 // ═══════════════════════════════════════════════════════════
 function CharacterSelect({ onSelect }) {
   const [hovered, setHovered] = useState(null);
   const [customName, setCustomName] = useState("");
   const [selected, setSelected] = useState(null);
+  const [mode, setMode] = useState(null); // "adventure" | "arena"
 
-  const handlePick = (c) => {
-    if (c.id === "custom" && !customName.trim()) return;
-    const name = c.id === "custom" ? customName.trim() : c.name;
-    onSelect({ ...c, name });
+  const handlePick = () => {
+    if (!selected || !mode) return;
+    const char = CHARACTERS.find(c => c.id === selected);
+    if (char.id === "custom" && !customName.trim()) return;
+    const name = char.id === "custom" ? customName.trim() : char.name;
+    onSelect({ ...char, name }, mode);
   };
 
   return (
     <div style={{ animation: "fadeUp 0.6s ease", maxWidth: 860, margin: "0 auto", padding: "0 20px" }}>
       <div style={{ textAlign: "center", marginBottom: 40 }}>
-        <div style={{ fontSize: 11, letterSpacing: 6, color: "#374151", textTransform: "uppercase", marginBottom: 12, fontFamily: "monospace" }}>✦ WHO WALKS THE SCORPIO SKY? ✦</div>
-        <h2 style={{ fontSize: "clamp(20px,4vw,34px)", fontWeight: 800, color: "#e5e7eb", letterSpacing: 2, marginBottom: 8 }}>CHOOSE YOUR HERO</h2>
-        <p style={{ color: "#4b5563", fontSize: 13, maxWidth: 480, margin: "0 auto", lineHeight: 1.6 }}>
-          Five sky-cities float above Scorpio's constellation. Only a true Data Architect can unlock their secrets.
+        <div style={{ fontSize: 11, letterSpacing: 6, color: "#374151", textTransform: "uppercase", marginBottom: 12, fontFamily: "monospace" }}>✦ QUEM CAMINHA PELO CÉU DE ESCORPIÃO? ✦</div>
+        <h2 style={{ fontSize: "clamp(20px,4vw,32px)", fontWeight: 800, color: "#e5e7eb", letterSpacing: 2, marginBottom: 8 }}>ESCOLHA SEU HERÓI</h2>
+        <p style={{ color: "#4b5563", fontSize: 13, maxWidth: 480, margin: "0 auto" }}>
+          Cinco cidades flutuam no céu. Apenas um verdadeiro Arquiteto de Dados pode desvendar seus segredos.
         </p>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))", gap: 16, marginBottom: 32 }}>
+      {/* Personagens */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(155px, 1fr))", gap: 14, marginBottom: 28 }}>
         {CHARACTERS.map(c => {
           const active = hovered === c.id || selected === c.id;
           return (
             <div key={c.id} onClick={() => setSelected(c.id)}
               onMouseEnter={() => setHovered(c.id)} onMouseLeave={() => setHovered(null)}
-              style={{
-                borderRadius: 20, padding: "24px 16px", textAlign: "center", cursor: "pointer",
-                background: active ? "rgba(17,24,39,0.98)" : "rgba(17,24,39,0.7)",
-                border: `2px solid ${active ? c.color : c.color + "33"}`,
-                transition: "all 0.3s", transform: active ? "translateY(-8px) scale(1.03)" : "none",
-                boxShadow: active ? `0 20px 60px ${c.glow || c.color + "30"}, 0 0 40px ${c.color + "20"}` : "none",
-              }}>
-              <div style={{ fontSize: 44, marginBottom: 12, filter: active ? "drop-shadow(0 0 16px " + c.color + ")" : "none", transition: "all 0.3s" }}>{c.art}</div>
-              <div style={{ color: active ? c.accent || c.color : c.color, fontWeight: 800, fontSize: 15, marginBottom: 4, letterSpacing: 1 }}>{c.name}</div>
-              <div style={{ color: "#4b5563", fontSize: 10, marginBottom: 8, fontFamily: "monospace" }}>{c.origin}</div>
+              style={{ borderRadius: 18, padding: "20px 14px", textAlign: "center", cursor: "pointer", background: active ? "rgba(17,24,39,0.98)" : "rgba(17,24,39,0.7)", border: `2px solid ${active ? c.color : c.color + "33"}`, transition: "all 0.3s", transform: active ? "translateY(-6px)" : "none", boxShadow: active ? `0 16px 50px ${c.color}25` : "none" }}>
+              <div style={{ fontSize: 40, marginBottom: 10 }}>{c.art}</div>
+              <div style={{ color: active ? c.accent || c.color : c.color, fontWeight: 800, fontSize: 13, marginBottom: 4 }}>{c.name}</div>
+              <div style={{ color: "#4b5563", fontSize: 10, marginBottom: 6, fontFamily: "monospace" }}>{c.origin}</div>
               <div style={{ color: "#374151", fontSize: 11, lineHeight: 1.5 }}>{c.desc}</div>
               {c.id === "custom" && selected === "custom" && (
-                <input value={customName} onChange={e => setCustomName(e.target.value)}
-                  onClick={e => e.stopPropagation()}
-                  placeholder="Your name..."
-                  style={{ marginTop: 12, width: "100%", background: "rgba(0,0,0,0.4)", border: `1px solid ${c.color}44`, borderRadius: 8, padding: "6px 10px", color: "#e5e7eb", fontSize: 12, outline: "none", fontFamily: "monospace" }} />
+                <input value={customName} onChange={e => setCustomName(e.target.value)} onClick={e => e.stopPropagation()} placeholder="Seu nome..." style={{ marginTop: 10, width: "100%", background: "rgba(0,0,0,0.4)", border: `1px solid ${c.color}44`, borderRadius: 8, padding: "6px 10px", color: "#e5e7eb", fontSize: 12, outline: "none" }} />
               )}
             </div>
           );
         })}
       </div>
 
+      {/* Modo */}
       {selected && (
-        <div style={{ textAlign: "center", animation: "fadeUp 0.4s" }}>
-          <button onClick={() => handlePick(CHARACTERS.find(c => c.id === selected))}
-            style={{ padding: "16px 48px", background: `linear-gradient(135deg, ${CHARACTERS.find(c => c.id === selected)?.color}, ${CHARACTERS.find(c => c.id === selected)?.color + "aa"})`, border: "none", borderRadius: 16, color: "#fff", fontWeight: 800, fontSize: 16, cursor: "pointer", letterSpacing: 2, boxShadow: `0 0 40px ${CHARACTERS.find(c => c.id === selected)?.color + "44"}` }}>
-            BEGIN THE JOURNEY ⚔️
+        <div style={{ animation: "fadeUp 0.4s", marginBottom: 24 }}>
+          <div style={{ textAlign: "center", color: "#374151", fontSize: 11, letterSpacing: 4, fontFamily: "monospace", marginBottom: 16 }}>✦ ESCOLHA SEU CAMINHO ✦</div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+            {[
+              { id: "adventure", label: "🗺️ AVENTURA", desc: "Explore cidades, estude lições e enfrente bosses temáticos", color: "#F7C948" },
+              { id: "arena", label: "⚔️ ARENA", desc: "Questões reais do exame GCP com filtro por domínio", color: "#00C9A7" },
+            ].map(m => (
+              <div key={m.id} onClick={() => setMode(m.id)}
+                style={{ borderRadius: 16, padding: "20px", cursor: "pointer", background: mode === m.id ? `${m.color}12` : "rgba(17,24,39,0.8)", border: `2px solid ${mode === m.id ? m.color : m.color + "30"}`, transition: "all 0.3s", transform: mode === m.id ? "scale(1.02)" : "none", textAlign: "center" }}>
+                <div style={{ color: m.color, fontWeight: 800, fontSize: 16, marginBottom: 8, letterSpacing: 1 }}>{m.label}</div>
+                <div style={{ color: "#4b5563", fontSize: 12, lineHeight: 1.5 }}>{m.desc}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {selected && mode && (
+        <div style={{ textAlign: "center", animation: "fadeUp 0.3s" }}>
+          <button onClick={handlePick} style={{ padding: "16px 48px", background: `linear-gradient(135deg, #F7C948, #f97316)`, border: "none", borderRadius: 16, color: "#fff", fontWeight: 800, fontSize: 16, cursor: "pointer", letterSpacing: 2, boxShadow: "0 0 40px rgba(247,201,72,0.3)" }}>
+            COMEÇAR JORNADA ⚔️
           </button>
         </div>
       )}
@@ -433,76 +208,238 @@ function CharacterSelect({ onSelect }) {
   );
 }
 
+// ═══════════════════════════════════════════════════════════
+// ARENA — questões do JSON
+// ═══════════════════════════════════════════════════════════
+function Arena({ hero, onBack }) {
+  const [questions, setQuestions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [mode, setMode] = useState("menu"); // menu | battle
+  const [selectedDomain, setSelectedDomain] = useState("all");
+  const [questionCount, setQuestionCount] = useState(10);
+  const [battleQuestions, setBattleQuestions] = useState([]);
+  const [idx, setIdx] = useState(0);
+  const [selected, setSelected] = useState(null);
+  const [answered, setAnswered] = useState(false);
+  const [score, setScore] = useState(0);
+  const [done, setDone] = useState(false);
+  const [shake, setShake] = useState(false);
+
+  useEffect(() => {
+    fetch("/gcp-chronicles/questions_all.json")
+      .then(r => r.json())
+      .then(data => { setQuestions(data); setLoading(false); })
+      .catch(() => setError("Erro ao carregar questões. Verifique se o arquivo está em public/"));
+  }, []);
+
+  const domains = questions.length > 0
+    ? ["all", ...new Set(questions.map(q => q.domain))]
+    : ["all"];
+
+  const domainLabels = { all: "🌐 Todos", bigquery: "🏰 BigQuery", dataflow: "🌊 Dataflow", storage: "🗝️ Storage", vertex: "🧠 Vertex AI", composer: "⚙️ Composer", pubsub: "📡 Pub/Sub", security: "🔐 Security", migration: "🚚 Migração", governance: "📋 Governança" };
+
+  const startBattle = () => {
+    const filtered = selectedDomain === "all" ? questions : questions.filter(q => q.domain === selectedDomain);
+    const shuffled = [...filtered].sort(() => Math.random() - 0.5).slice(0, Math.min(questionCount, filtered.length));
+    setBattleQuestions(shuffled);
+    setIdx(0); setSelected(null); setAnswered(false); setScore(0); setDone(false);
+    setMode("battle");
+  };
+
+  const pick = (i) => {
+    if (answered) return;
+    setSelected(i);
+    setAnswered(true);
+    if (i === battleQuestions[idx].correct) setScore(s => s + 1);
+    else { setShake(true); setTimeout(() => setShake(false), 600); }
+  };
+
+  const next = () => {
+    if (idx + 1 >= battleQuestions.length) setDone(true);
+    else { setIdx(i => i + 1); setSelected(null); setAnswered(false); }
+  };
+
+  if (loading) return (
+    <div style={{ textAlign: "center", padding: 60 }}>
+      <div style={{ fontSize: 40, marginBottom: 16, animation: "twkl 1s infinite alternate" }}>⚔️</div>
+      <div style={{ color: "#4b5563", fontFamily: "monospace" }}>Carregando questões...</div>
+    </div>
+  );
+
+  if (error) return (
+    <div style={{ textAlign: "center", padding: 60, maxWidth: 500, margin: "0 auto" }}>
+      <div style={{ fontSize: 40, marginBottom: 16 }}>⚠️</div>
+      <div style={{ color: "#ef4444", marginBottom: 16 }}>{error}</div>
+      <button onClick={onBack} style={{ padding: "10px 24px", background: "none", border: "1px solid #374151", borderRadius: 8, color: "#9ca3af", cursor: "pointer" }}>← Voltar</button>
+    </div>
+  );
+
+  if (mode === "menu") {
+    const filtered = selectedDomain === "all" ? questions : questions.filter(q => q.domain === selectedDomain);
+    return (
+      <div style={{ maxWidth: 700, margin: "0 auto", animation: "fadeUp 0.5s" }}>
+        <button onClick={onBack} style={{ background: "none", border: "1px solid #1a2040", borderRadius: 8, color: "#4b5563", padding: "6px 14px", cursor: "pointer", fontSize: 12, marginBottom: 24, fontFamily: "monospace" }}>← VOLTAR</button>
+
+        <div style={{ textAlign: "center", marginBottom: 36 }}>
+          <div style={{ fontSize: 52, marginBottom: 12 }}>⚔️</div>
+          <h2 style={{ color: "#F7C948", fontWeight: 800, fontSize: 26, letterSpacing: 2, marginBottom: 6 }}>ARENA DE TREINAMENTO</h2>
+          <div style={{ color: "#4b5563", fontSize: 13 }}>{questions.length} questões oficiais GCP disponíveis</div>
+        </div>
+
+        {/* Filtro por domínio */}
+        <div style={{ marginBottom: 28 }}>
+          <div style={{ color: "#374151", fontSize: 11, letterSpacing: 3, fontFamily: "monospace", marginBottom: 12 }}>DOMÍNIO</div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+            {domains.map(d => (
+              <button key={d} onClick={() => setSelectedDomain(d)}
+                style={{ padding: "8px 16px", borderRadius: 20, border: `1.5px solid ${selectedDomain === d ? "#F7C948" : "#1a2040"}`, background: selectedDomain === d ? "rgba(247,201,72,0.1)" : "rgba(10,15,30,0.8)", color: selectedDomain === d ? "#F7C948" : "#4b5563", fontSize: 12, cursor: "pointer", transition: "all 0.2s", fontFamily: "monospace" }}>
+                {domainLabels[d] || d}
+              </button>
+            ))}
+          </div>
+          <div style={{ color: "#374151", fontSize: 11, fontFamily: "monospace", marginTop: 8 }}>{filtered.length} questões no domínio selecionado</div>
+        </div>
+
+        {/* Quantidade */}
+        <div style={{ marginBottom: 28 }}>
+          <div style={{ color: "#374151", fontSize: 11, letterSpacing: 3, fontFamily: "monospace", marginBottom: 12 }}>QUANTIDADE DE QUESTÕES</div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))", gap: 10 }}>
+            {[10, 20, 30, filtered.length].filter((v, i, a) => a.indexOf(v) === i && v > 0).map(count => (
+              <button key={count} onClick={() => setQuestionCount(count)}
+                style={{ padding: "16px 12px", background: questionCount === count ? "rgba(247,201,72,0.1)" : "rgba(10,15,30,0.9)", border: `2px solid ${questionCount === count ? "#F7C948" : "#1a2040"}`, borderRadius: 12, cursor: "pointer", transition: "all 0.2s", textAlign: "center" }}>
+                <div style={{ color: questionCount === count ? "#F7C948" : "#e5e7eb", fontWeight: 800, fontSize: 22, fontFamily: "monospace" }}>{count}</div>
+                <div style={{ color: "#4b5563", fontSize: 10, marginTop: 2 }}>questões</div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <button onClick={startBattle} style={{ width: "100%", padding: "18px", background: "linear-gradient(135deg, #F7C948, #f97316)", border: "none", borderRadius: 14, color: "#fff", fontWeight: 800, fontSize: 16, cursor: "pointer", letterSpacing: 1, boxShadow: "0 8px 30px rgba(247,201,72,0.3)" }}>
+          ⚔️ INICIAR BATALHA
+        </button>
+      </div>
+    );
+  }
+
+  if (mode === "battle") {
+    if (done) {
+      const pct = Math.round((score / battleQuestions.length) * 100);
+      return (
+        <div style={{ textAlign: "center", padding: "40px 20px", maxWidth: 560, margin: "0 auto", animation: "fadeUp 0.5s" }}>
+          <div style={{ fontSize: 80, marginBottom: 20 }}>{pct >= 80 ? "🏆" : pct >= 60 ? "💪" : "📚"}</div>
+          <div style={{ fontWeight: 800, fontSize: 28, color: pct >= 80 ? "#F7C948" : "#9ca3af", marginBottom: 10, letterSpacing: 2 }}>
+            {pct >= 80 ? "EXCELENTE!" : pct >= 60 ? "BOM TRABALHO!" : "CONTINUE ESTUDANDO!"}
+          </div>
+          <div style={{ color: "#d1d5db", fontSize: 18, marginBottom: 6 }}>{score}/{battleQuestions.length} corretas — {pct}%</div>
+          <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 28, flexWrap: "wrap" }}>
+            <button onClick={() => setMode("menu")} style={{ padding: "14px 32px", background: "linear-gradient(135deg, #F7C948, #f97316)", border: "none", borderRadius: 14, color: "#fff", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>⚔️ Nova Batalha</button>
+            <button onClick={onBack} style={{ padding: "14px 32px", background: "rgba(107,114,128,0.1)", border: "1px solid #374151", borderRadius: 14, color: "#9ca3af", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>🏠 Menu Principal</button>
+          </div>
+        </div>
+      );
+    }
+
+    const q = battleQuestions[idx];
+    const correctIdx = typeof q.correct === "number" ? q.correct : (Array.isArray(q.correct) ? q.correct[0] : 0);
+
+    return (
+      <div style={{ maxWidth: 660, margin: "0 auto", animation: "fadeUp 0.5s" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+          <button onClick={() => setMode("menu")} style={{ background: "none", border: "1px solid #1a2040", borderRadius: 8, color: "#4b5563", padding: "6px 14px", cursor: "pointer", fontSize: 12, fontFamily: "monospace" }}>← SAIR</button>
+          <div style={{ color: "#F7C948", fontFamily: "monospace", fontSize: 13, fontWeight: 700 }}>{score}/{idx + 1} de {battleQuestions.length}</div>
+        </div>
+
+        <div style={{ height: 5, background: "#0a0f1e", borderRadius: 99, marginBottom: 22, overflow: "hidden", border: "1px solid #1a2040" }}>
+          <div style={{ height: "100%", width: `${((idx + 1) / battleQuestions.length) * 100}%`, background: "linear-gradient(90deg, #F7C948, #f97316)", borderRadius: 99, transition: "width 0.6s" }} />
+        </div>
+
+        {q.domain && (
+          <div style={{ display: "inline-block", padding: "4px 12px", background: "rgba(247,201,72,0.08)", border: "1px solid #F7C94822", borderRadius: 20, color: "#F7C948", fontSize: 10, fontFamily: "monospace", marginBottom: 14 }}>
+            {domainLabels[q.domain] || q.domain}
+          </div>
+        )}
+
+        <div style={{ color: "#f3f4f6", fontSize: 15, lineHeight: 1.8, marginBottom: 22, fontWeight: 500, animation: shake ? "shakeEl 0.5s" : "none" }}>{q.text}</div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
+          {q.options.map((opt, i) => {
+            let bg = "rgba(255,255,255,0.02)", border = "#1a2040", color = "#9ca3af";
+            if (answered) {
+              if (i === correctIdx) { bg = "rgba(0,201,167,0.1)"; border = "#00C9A7"; color = "#00C9A7"; }
+              else if (i === selected) { bg = "rgba(239,68,68,0.1)"; border = "#ef4444"; color = "#ef4444"; }
+            }
+            return (
+              <button key={i} onClick={() => pick(i)}
+                style={{ background: bg, border: `1.5px solid ${border}`, borderRadius: 12, padding: "14px 18px", color, fontSize: 14, textAlign: "left", cursor: answered ? "default" : "pointer", transition: "all 0.2s", lineHeight: 1.5 }}
+                onMouseEnter={e => { if (!answered) { e.currentTarget.style.borderColor = "#F7C94888"; e.currentTarget.style.color = "#e5e7eb"; } }}
+                onMouseLeave={e => { if (!answered) { e.currentTarget.style.borderColor = "#1a2040"; e.currentTarget.style.color = "#9ca3af"; } }}>
+                <span style={{ opacity: 0.3, marginRight: 10, fontFamily: "monospace" }}>{String.fromCharCode(65 + i)}.</span>{opt}
+              </button>
+            );
+          })}
+        </div>
+
+        {answered && (
+          <div style={{ background: selected === correctIdx ? "rgba(0,201,167,0.06)" : "rgba(247,201,72,0.06)", border: `1px solid ${selected === correctIdx ? "#00C9A733" : "#F7C94833"}`, borderRadius: 14, padding: "18px 20px", color: "#d1d5db", fontSize: 13, lineHeight: 1.8, marginBottom: 16, animation: "fadeUp 0.4s" }}>
+            <div style={{ fontWeight: 700, marginBottom: 8, color: selected === correctIdx ? "#00C9A7" : "#F7C948" }}>
+              {selected === correctIdx ? "✨ Correto!" : "📖 Explicação:"}
+            </div>
+            {q.explanation}
+          </div>
+        )}
+
+        {answered && (
+          <button onClick={next} style={{ width: "100%", padding: 16, background: "linear-gradient(135deg, #F7C948, #f97316)", border: "none", borderRadius: 14, color: "#fff", fontWeight: 700, fontSize: 15, cursor: "pointer", animation: "fadeUp 0.3s" }}>
+            {idx + 1 >= battleQuestions.length ? "🏁 Ver Resultado" : "Próxima Questão →"}
+          </button>
+        )}
+      </div>
+    );
+  }
+
+  return null;
+}
+
+// ═══════════════════════════════════════════════════════════
+// ADVENTURE SCREENS
+// ═══════════════════════════════════════════════════════════
 function WorldMap({ cities, hero, xp, level, completedLessons, completedChallenges, onCityClick }) {
   return (
     <div style={{ animation: "fadeUp 0.5s ease" }}>
       <div style={{ textAlign: "center", marginBottom: 32 }}>
-        <div style={{ fontSize: 11, letterSpacing: 5, color: "#374151", textTransform: "uppercase", marginBottom: 8, fontFamily: "monospace" }}>✦ THE SCORPIO SKY CITIES ✦</div>
-        <div style={{ color: hero.color, fontWeight: 700, fontSize: 20, marginBottom: 4 }}>
-          {hero.art} {hero.name}
-        </div>
-        <div style={{ maxWidth: 360, margin: "0 auto" }}>
-          <XPBar xp={xp} level={level} />
-        </div>
+        <div style={{ fontSize: 11, letterSpacing: 5, color: "#374151", textTransform: "uppercase", marginBottom: 8, fontFamily: "monospace" }}>✦ AS CIDADES DO CÉU DE ESCORPIÃO ✦</div>
+        <div style={{ color: hero.color, fontWeight: 700, fontSize: 18, marginBottom: 8 }}>{hero.art} {hero.name}</div>
+        <div style={{ maxWidth: 360, margin: "0 auto" }}><XPBar xp={xp} level={level} /></div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))", gap: 20, marginBottom: 32 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))", gap: 18, marginBottom: 28 }}>
         {cities.map(city => {
           const lessonsComplete = city.lessons.filter(l => completedLessons.has(l.id)).length;
           const challengeDone = completedChallenges.has(city.id);
           const unlocked = !city.locked;
           const pct = city.lessons.length > 0 ? Math.round((lessonsComplete / city.lessons.length) * 100) : 0;
-
           return (
             <div key={city.id} onClick={() => unlocked && onCityClick(city)}
-              style={{
-                borderRadius: 20, padding: "24px", cursor: unlocked ? "pointer" : "not-allowed",
-                background: "rgba(10,15,30,0.9)", border: `1.5px solid ${unlocked ? city.color + "55" : "#1a2040"}`,
-                opacity: unlocked ? 1 : 0.4, transition: "all 0.3s", backdropFilter: "blur(10px)",
-                position: "relative", overflow: "hidden",
-              }}
-              onMouseEnter={e => { if (unlocked) { e.currentTarget.style.borderColor = city.color; e.currentTarget.style.transform = "translateY(-6px)"; e.currentTarget.style.boxShadow = `0 20px 60px ${city.glow}`; } }}
+              style={{ borderRadius: 18, padding: "22px", cursor: unlocked ? "pointer" : "not-allowed", background: "rgba(10,15,30,0.9)", border: `1.5px solid ${unlocked ? city.color + "55" : "#1a2040"}`, opacity: unlocked ? 1 : 0.4, transition: "all 0.3s", position: "relative", overflow: "hidden" }}
+              onMouseEnter={e => { if (unlocked) { e.currentTarget.style.borderColor = city.color; e.currentTarget.style.transform = "translateY(-5px)"; e.currentTarget.style.boxShadow = `0 16px 50px ${city.glow}`; } }}
               onMouseLeave={e => { e.currentTarget.style.borderColor = unlocked ? city.color + "55" : "#1a2040"; e.currentTarget.style.transform = "none"; e.currentTarget.style.boxShadow = "none"; }}>
-
-              {/* Progress bar at top */}
               {unlocked && <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "#0a0f1e" }}><div style={{ height: "100%", width: `${pct}%`, background: city.color, transition: "width 0.8s" }} /></div>}
-
-              {!unlocked && <div style={{ position: "absolute", top: 14, right: 14, fontSize: 14 }}>🔒</div>}
-              {challengeDone && <div style={{ position: "absolute", top: 14, right: 14, fontSize: 14 }}>🏆</div>}
-
-              <div style={{ fontSize: 38, marginBottom: 12 }}>{city.emoji}</div>
-              <div style={{ color: city.color, fontWeight: 800, fontSize: 16, marginBottom: 3, letterSpacing: 1 }}>{city.name}</div>
-              <div style={{ color: "#374151", fontSize: 11, marginBottom: 8, fontFamily: "monospace" }}>{city.subtitle}</div>
-              <div style={{ color: "#4b5563", fontSize: 12, marginBottom: 12, lineHeight: 1.5 }}>{city.domain}</div>
-
+              {!unlocked && <div style={{ position: "absolute", top: 12, right: 12, fontSize: 14 }}>🔒</div>}
+              {challengeDone && <div style={{ position: "absolute", top: 12, right: 12, fontSize: 14 }}>🏆</div>}
+              <div style={{ fontSize: 36, marginBottom: 10 }}>{city.emoji}</div>
+              <div style={{ color: city.color, fontWeight: 800, fontSize: 15, marginBottom: 3, letterSpacing: 1 }}>{city.name}</div>
+              <div style={{ color: "#374151", fontSize: 11, marginBottom: 6, fontFamily: "monospace" }}>{city.subtitle}</div>
+              <div style={{ color: "#4b5563", fontSize: 12, marginBottom: 10, lineHeight: 1.5 }}>{city.domain}</div>
               {unlocked && (
-                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                      <span style={{ color: "#374151", fontSize: 10, fontFamily: "monospace" }}>STUDY TRAIL</span>
-                      <span style={{ color: city.color, fontSize: 10, fontFamily: "monospace" }}>{lessonsComplete}/{city.lessons.length}</span>
-                    </div>
-                    <div style={{ height: 4, background: "#0a0f1e", borderRadius: 99, overflow: "hidden" }}>
-                      <div style={{ height: "100%", width: `${pct}%`, background: city.color, borderRadius: 99, transition: "width 0.8s" }} />
-                    </div>
-                  </div>
-                  {challengeDone
-                    ? <div style={{ color: "#F7C948", fontSize: 10, fontFamily: "monospace", whiteSpace: "nowrap" }}>✓ CLEARED</div>
-                    : <div style={{ color: "#374151", fontSize: 10, fontFamily: "monospace", whiteSpace: "nowrap" }}>BOSS AWAITS</div>}
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div style={{ color: city.color, fontSize: 10, fontFamily: "monospace" }}>{lessonsComplete}/{city.lessons.length} lições</div>
+                  <div style={{ color: challengeDone ? "#F7C948" : "#374151", fontSize: 10, fontFamily: "monospace" }}>{challengeDone ? "✓ CONQUISTADA" : "BOSS AGUARDA"}</div>
                 </div>
               )}
             </div>
           );
         })}
-      </div>
-
-      <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-        {[{ l: "Cities", v: cities.filter(c => !c.locked).length, c: "#F7C948" }, { l: "XP", v: xp, c: "#00C9A7" }, { l: "Level", v: `Lv.${level}`, c: "#A259FF" }].map(({ l, v, c }) => (
-          <div key={l} style={{ background: `${c}0d`, border: `1px solid ${c}22`, borderRadius: 12, padding: "10px 20px", textAlign: "center" }}>
-            <div style={{ color: c, fontWeight: 800, fontSize: 20, fontFamily: "monospace" }}>{v}</div>
-            <div style={{ color: "#374151", fontSize: 10 }}>{l}</div>
-          </div>
-        ))}
       </div>
     </div>
   );
@@ -510,72 +447,59 @@ function WorldMap({ cities, hero, xp, level, completedLessons, completedChalleng
 
 function CityView({ city, hero, completedLessons, completedChallenge, onLesson, onChallenge, onBack }) {
   const allLessonsDone = city.lessons.every(l => completedLessons.has(l.id));
-
   return (
-    <div style={{ maxWidth: 700, margin: "0 auto", animation: "fadeUp 0.5s" }}>
-      <button onClick={onBack} style={{ background: "none", border: "1px solid #1a2040", borderRadius: 8, color: "#4b5563", padding: "6px 14px", cursor: "pointer", fontSize: 12, marginBottom: 24, fontFamily: "monospace" }}>← WORLD MAP</button>
-
-      <div style={{ textAlign: "center", marginBottom: 36 }}>
-        <div style={{ fontSize: 52, marginBottom: 10 }}>{city.emoji}</div>
-        <h2 style={{ color: city.color, fontWeight: 800, fontSize: 26, letterSpacing: 2, marginBottom: 4 }}>{city.name}</h2>
-        <div style={{ color: "#374151", fontSize: 12, fontFamily: "monospace", marginBottom: 8 }}>{city.subtitle.toUpperCase()}</div>
+    <div style={{ maxWidth: 680, margin: "0 auto", animation: "fadeUp 0.5s" }}>
+      <button onClick={onBack} style={{ background: "none", border: "1px solid #1a2040", borderRadius: 8, color: "#4b5563", padding: "6px 14px", cursor: "pointer", fontSize: 12, marginBottom: 22, fontFamily: "monospace" }}>← MAPA MUNDIAL</button>
+      <div style={{ textAlign: "center", marginBottom: 32 }}>
+        <div style={{ fontSize: 48, marginBottom: 10 }}>{city.emoji}</div>
+        <h2 style={{ color: city.color, fontWeight: 800, fontSize: 24, letterSpacing: 2, marginBottom: 4 }}>{city.name}</h2>
+        <div style={{ color: "#374151", fontSize: 11, fontFamily: "monospace", marginBottom: 6 }}>{city.subtitle.toUpperCase()}</div>
         <div style={{ color: "#4b5563", fontSize: 13 }}>{city.domain}</div>
       </div>
 
-      {/* STUDY TRAIL */}
-      <div style={{ marginBottom: 32 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+      <div style={{ marginBottom: 28 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
           <div style={{ height: 1, flex: 1, background: "#1a2040" }} />
-          <span style={{ color: "#374151", fontSize: 11, fontFamily: "monospace", letterSpacing: 3 }}>STUDY TRAIL</span>
+          <span style={{ color: "#374151", fontSize: 11, fontFamily: "monospace", letterSpacing: 3 }}>TRILHA DE ESTUDOS</span>
           <div style={{ height: 1, flex: 1, background: "#1a2040" }} />
         </div>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {city.lessons.map((lesson, idx) => {
             const done = completedLessons.has(lesson.id);
             const prev = idx === 0 || completedLessons.has(city.lessons[idx - 1].id);
             return (
               <div key={lesson.id} onClick={() => prev && onLesson(lesson)}
-                style={{
-                  borderRadius: 16, padding: "18px 20px", cursor: prev ? "pointer" : "not-allowed",
-                  background: "rgba(10,15,30,0.9)", border: `1.5px solid ${done ? city.color + "88" : prev ? city.color + "33" : "#1a2040"}`,
-                  opacity: prev ? 1 : 0.4, transition: "all 0.3s", display: "flex", alignItems: "center", gap: 16,
-                }}
+                style={{ borderRadius: 14, padding: "16px 18px", cursor: prev ? "pointer" : "not-allowed", background: "rgba(10,15,30,0.9)", border: `1.5px solid ${done ? city.color + "88" : prev ? city.color + "33" : "#1a2040"}`, opacity: prev ? 1 : 0.4, transition: "all 0.3s", display: "flex", alignItems: "center", gap: 14 }}
                 onMouseEnter={e => { if (prev) e.currentTarget.style.borderColor = city.color; }}
                 onMouseLeave={e => { e.currentTarget.style.borderColor = done ? city.color + "88" : prev ? city.color + "33" : "#1a2040"; }}>
-                <div style={{ fontSize: 28, width: 48, textAlign: "center" }}>{done ? "✅" : lesson.icon}</div>
+                <div style={{ fontSize: 26, width: 40, textAlign: "center" }}>{done ? "✅" : lesson.icon}</div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ color: done ? city.color : "#e5e7eb", fontWeight: 700, fontSize: 14, marginBottom: 3 }}>{lesson.title}</div>
+                  <div style={{ color: done ? city.color : "#e5e7eb", fontWeight: 700, fontSize: 14, marginBottom: 2 }}>{lesson.title}</div>
                   <div style={{ color: "#4b5563", fontSize: 12 }}>{lesson.concept}</div>
                 </div>
-                <div style={{ color: city.color + "88", fontSize: 11, fontFamily: "monospace" }}>
-                  {done ? `+${XP_LESSON}xp ✓` : prev ? "→ EXPLORE" : "🔒"}
-                </div>
+                <div style={{ color: city.color + "88", fontSize: 11, fontFamily: "monospace" }}>{done ? `+${XP_LESSON}xp ✓` : prev ? "→" : "🔒"}</div>
               </div>
             );
           })}
         </div>
       </div>
 
-      {/* PORTAL / BOSS */}
-      <div style={{ borderRadius: 20, padding: "28px", background: "rgba(10,15,30,0.95)", border: `2px solid ${allLessonsDone ? city.color : "#1a2040"}`, opacity: allLessonsDone ? 1 : 0.5, textAlign: "center", transition: "all 0.5s", boxShadow: allLessonsDone ? `0 0 40px ${city.glow}` : "none" }}>
-        <div style={{ fontSize: 48, marginBottom: 12 }}>{completedChallenge ? "🌟" : allLessonsDone ? city.bossEmoji : "🌀"}</div>
-        <div style={{ color: allLessonsDone ? city.color : "#374151", fontWeight: 800, fontSize: 18, marginBottom: 6, letterSpacing: 1 }}>
-          {completedChallenge ? "CITY CONQUERED!" : allLessonsDone ? `BOSS: ${city.bossName}` : "PORTAL SEALED"}
+      <div style={{ borderRadius: 18, padding: "24px", background: "rgba(10,15,30,0.95)", border: `2px solid ${allLessonsDone ? city.color : "#1a2040"}`, opacity: allLessonsDone ? 1 : 0.5, textAlign: "center", transition: "all 0.5s", boxShadow: allLessonsDone ? `0 0 40px ${city.glow}` : "none" }}>
+        <div style={{ fontSize: 44, marginBottom: 10 }}>{completedChallenge ? "🌟" : allLessonsDone ? city.bossEmoji : "🌀"}</div>
+        <div style={{ color: allLessonsDone ? city.color : "#374151", fontWeight: 800, fontSize: 16, marginBottom: 6, letterSpacing: 1 }}>
+          {completedChallenge ? "CIDADE CONQUISTADA!" : allLessonsDone ? `BOSS: ${city.bossName}` : "PORTAL SELADO"}
         </div>
-        <div style={{ color: "#4b5563", fontSize: 13, marginBottom: allLessonsDone ? 20 : 0, lineHeight: 1.6 }}>
-          {completedChallenge ? `${hero.name} has mastered ${city.name}. The portal to the next city glows.`
-            : allLessonsDone ? city.bossDesc
-            : "Complete all study lessons to unseal the portal."}
+        <div style={{ color: "#4b5563", fontSize: 13, marginBottom: allLessonsDone ? 18 : 0, lineHeight: 1.6 }}>
+          {completedChallenge ? `${hero.name} dominou ${city.name}. O portal para a próxima cidade brilha.` : allLessonsDone ? city.bossDesc : "Complete todas as lições para desselar o portal."}
         </div>
         {allLessonsDone && !completedChallenge && (
-          <button onClick={onChallenge} style={{ padding: "14px 36px", background: `linear-gradient(135deg, ${city.color}, ${city.color}99)`, border: "none", borderRadius: 14, color: "#fff", fontWeight: 800, fontSize: 15, cursor: "pointer", letterSpacing: 1, boxShadow: `0 0 30px ${city.glow}` }}>
-            ⚔️ FACE THE BOSS
+          <button onClick={onChallenge} style={{ padding: "14px 32px", background: `linear-gradient(135deg, ${city.color}, ${city.color}99)`, border: "none", borderRadius: 12, color: "#fff", fontWeight: 800, fontSize: 14, cursor: "pointer", letterSpacing: 1 }}>
+            ⚔️ ENFRENTAR O BOSS
           </button>
         )}
         {completedChallenge && (
-          <button onClick={onBack} style={{ padding: "14px 36px", background: "rgba(247,201,72,0.15)", border: "1px solid #F7C94866", borderRadius: 14, color: "#F7C948", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
-            🗺️ Return to World Map
+          <button onClick={onBack} style={{ padding: "14px 32px", background: "rgba(247,201,72,0.1)", border: "1px solid #F7C94866", borderRadius: 12, color: "#F7C948", fontWeight: 700, fontSize: 13, cursor: "pointer" }}>
+            🗺️ Voltar ao Mapa
           </button>
         )}
       </div>
@@ -584,68 +508,52 @@ function CityView({ city, hero, completedLessons, completedChallenge, onLesson, 
 }
 
 function LessonView({ lesson, city, hero, onComplete, onBack }) {
-  const [step, setStep] = useState(0); // 0-3: key points; 4: analogy; 5: tip; 6: done
-  const total = lesson.keyPoints.length + 2; // points + analogy + tip
-
-  const progress = step / total;
-
+  const [step, setStep] = useState(0);
+  const total = lesson.keyPoints.length + 2;
   return (
-    <div style={{ maxWidth: 660, margin: "0 auto", animation: "fadeUp 0.5s" }}>
-      <button onClick={onBack} style={{ background: "none", border: "1px solid #1a2040", borderRadius: 8, color: "#4b5563", padding: "6px 14px", cursor: "pointer", fontSize: 12, marginBottom: 24, fontFamily: "monospace" }}>← {city.name}</button>
-
-      <div style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 24 }}>
-        <div style={{ fontSize: 32 }}>{lesson.icon}</div>
+    <div style={{ maxWidth: 640, margin: "0 auto", animation: "fadeUp 0.5s" }}>
+      <button onClick={onBack} style={{ background: "none", border: "1px solid #1a2040", borderRadius: 8, color: "#4b5563", padding: "6px 14px", cursor: "pointer", fontSize: 12, marginBottom: 22, fontFamily: "monospace" }}>← {city.name}</button>
+      <div style={{ display: "flex", gap: 10, alignItems: "center", marginBottom: 22 }}>
+        <div style={{ fontSize: 30 }}>{lesson.icon}</div>
         <div>
-          <div style={{ color: city.color, fontWeight: 800, fontSize: 18, letterSpacing: 1 }}>{lesson.title}</div>
-          <div style={{ color: "#4b5563", fontSize: 12, fontFamily: "monospace" }}>{lesson.concept}</div>
+          <div style={{ color: city.color, fontWeight: 800, fontSize: 16, letterSpacing: 1 }}>{lesson.title}</div>
+          <div style={{ color: "#4b5563", fontSize: 12 }}>{lesson.concept}</div>
         </div>
       </div>
-
-      {/* Progress dots */}
-      <div style={{ display: "flex", gap: 6, marginBottom: 28 }}>
+      <div style={{ display: "flex", gap: 5, marginBottom: 24 }}>
         {Array.from({ length: total }).map((_, i) => (
           <div key={i} style={{ flex: 1, height: 4, borderRadius: 99, background: i < step ? city.color : "#1a2040", transition: "background 0.4s" }} />
         ))}
       </div>
-
-      {/* Content card */}
-      <div style={{ borderRadius: 20, padding: "32px 28px", background: "rgba(10,15,30,0.95)", border: `1.5px solid ${city.color}33`, marginBottom: 24, minHeight: 220, display: "flex", flexDirection: "column", justifyContent: "center", animation: "fadeUp 0.4s" }} key={step}>
-
+      <div style={{ borderRadius: 18, padding: "28px 24px", background: "rgba(10,15,30,0.95)", border: `1.5px solid ${city.color}33`, marginBottom: 20, minHeight: 200, display: "flex", flexDirection: "column", justifyContent: "center" }} key={step}>
         {step < lesson.keyPoints.length && (
           <>
-            <div style={{ fontSize: 11, color: "#374151", fontFamily: "monospace", letterSpacing: 3, marginBottom: 16 }}>KEY CONCEPT {step + 1}/{lesson.keyPoints.length}</div>
-            <div style={{ color: city.color, fontWeight: 800, fontSize: 18, marginBottom: 14, letterSpacing: 0.5 }}>{lesson.keyPoints[step].label}</div>
+            <div style={{ fontSize: 11, color: "#374151", fontFamily: "monospace", letterSpacing: 3, marginBottom: 14 }}>CONCEITO {step + 1}/{lesson.keyPoints.length}</div>
+            <div style={{ color: city.color, fontWeight: 800, fontSize: 17, marginBottom: 12 }}>{lesson.keyPoints[step].label}</div>
             <div style={{ color: "#d1d5db", fontSize: 15, lineHeight: 1.8 }}>{lesson.keyPoints[step].text}</div>
           </>
         )}
-
         {step === lesson.keyPoints.length && (
           <>
-            <div style={{ fontSize: 11, color: "#374151", fontFamily: "monospace", letterSpacing: 3, marginBottom: 16 }}>🗺️ {hero.name.toUpperCase()} ENCOUNTERS AN ELDER</div>
-            <div style={{ color: "#9ca3af", fontSize: 13, fontStyle: "italic", lineHeight: 1.8, background: `${city.color}0a`, border: `1px solid ${city.color}22`, borderRadius: 12, padding: "16px 20px" }}>
-              "{lesson.analogy}"
-            </div>
+            <div style={{ fontSize: 11, color: "#374151", fontFamily: "monospace", letterSpacing: 3, marginBottom: 14 }}>🗺️ {hero.name.toUpperCase()} ENCONTRA UM ANCIÃO</div>
+            <div style={{ color: "#9ca3af", fontSize: 13, fontStyle: "italic", lineHeight: 1.8, background: `${city.color}0a`, border: `1px solid ${city.color}22`, borderRadius: 12, padding: "14px 18px" }}>"{lesson.analogy}"</div>
           </>
         )}
-
         {step === lesson.keyPoints.length + 1 && (
           <>
-            <div style={{ fontSize: 11, color: "#F7C948aa", fontFamily: "monospace", letterSpacing: 3, marginBottom: 16 }}>⚡ EXAM TIP</div>
-            <div style={{ color: "#F7C948", fontWeight: 700, fontSize: 16, lineHeight: 1.8, background: "#F7C9480a", border: "1px solid #F7C94822", borderRadius: 12, padding: "16px 20px" }}>
-              {lesson.tip}
-            </div>
-            <div style={{ color: "#4b5563", fontSize: 12, marginTop: 16, fontFamily: "monospace" }}>+{XP_LESSON} XP on completion</div>
+            <div style={{ fontSize: 11, color: "#F7C948aa", fontFamily: "monospace", letterSpacing: 3, marginBottom: 14 }}>⚡ DICA DO EXAME</div>
+            <div style={{ color: "#F7C948", fontWeight: 700, fontSize: 15, lineHeight: 1.8, background: "#F7C9480a", border: "1px solid #F7C94822", borderRadius: 12, padding: "14px 18px" }}>{lesson.tip}</div>
+            <div style={{ color: "#4b5563", fontSize: 12, marginTop: 14, fontFamily: "monospace" }}>+{XP_LESSON} XP ao completar</div>
           </>
         )}
       </div>
-
       {step < total ? (
-        <button onClick={() => setStep(s => s + 1)} style={{ width: "100%", padding: "16px", background: `linear-gradient(135deg, ${city.color}, ${city.color}99)`, border: "none", borderRadius: 14, color: "#fff", fontWeight: 700, fontSize: 15, cursor: "pointer" }}>
-          {step < lesson.keyPoints.length ? "Next Concept →" : step === lesson.keyPoints.length ? "See the Exam Tip →" : "Complete Lesson ✓"}
+        <button onClick={() => setStep(s => s + 1)} style={{ width: "100%", padding: "15px", background: `linear-gradient(135deg, ${city.color}, ${city.color}99)`, border: "none", borderRadius: 12, color: "#fff", fontWeight: 700, fontSize: 15, cursor: "pointer" }}>
+          {step < lesson.keyPoints.length ? "Próximo Conceito →" : step === lesson.keyPoints.length ? "Ver Dica do Exame →" : "Completar Lição ✓"}
         </button>
       ) : (
-        <button onClick={onComplete} style={{ width: "100%", padding: "16px", background: `linear-gradient(135deg, ${city.color}, ${city.color}99)`, border: "none", borderRadius: 14, color: "#fff", fontWeight: 700, fontSize: 15, cursor: "pointer", animation: "fadeUp 0.3s" }}>
-          ✨ Claim +{XP_LESSON} XP →
+        <button onClick={onComplete} style={{ width: "100%", padding: "15px", background: `linear-gradient(135deg, ${city.color}, ${city.color}99)`, border: "none", borderRadius: 12, color: "#fff", fontWeight: 700, fontSize: 15, cursor: "pointer" }}>
+          ✨ Resgatar +{XP_LESSON} XP →
         </button>
       )}
     </div>
@@ -659,7 +567,6 @@ function BossFight({ city, hero, onComplete, onBack }) {
   const [score, setScore] = useState(0);
   const [done, setDone] = useState(false);
   const [shake, setShake] = useState(false);
-  const [flash, setFlash] = useState(null);
 
   const q = city.questions[idx];
 
@@ -667,9 +574,8 @@ function BossFight({ city, hero, onComplete, onBack }) {
     if (answered) return;
     setSelected(i);
     setAnswered(true);
-    if (i === q.correct) { setScore(s => s + 1); setFlash("correct"); }
-    else { setShake(true); setFlash("wrong"); setTimeout(() => setShake(false), 600); }
-    setTimeout(() => setFlash(null), 800);
+    if (i === q.correct) setScore(s => s + 1);
+    else { setShake(true); setTimeout(() => setShake(false), 600); }
   };
 
   const next = () => {
@@ -682,43 +588,40 @@ function BossFight({ city, hero, onComplete, onBack }) {
     const won = pct >= 60;
     const gained = score * XP_CORRECT + (city.questions.length - score) * XP_WRONG;
     return (
-      <div style={{ textAlign: "center", padding: "40px 20px", maxWidth: 560, margin: "0 auto", animation: "fadeUp 0.5s" }}>
-        <div style={{ fontSize: 80, marginBottom: 20, animation: won ? "floatEl 2s infinite" : "none" }}>{won ? "🏆" : "💪"}</div>
-        <div style={{ fontWeight: 800, fontSize: 28, color: won ? "#F7C948" : city.color, marginBottom: 10, letterSpacing: 2 }}>
-          {won ? `${city.bossName} DEFEATED!` : "KEEP TRAINING!"}
+      <div style={{ textAlign: "center", padding: "40px 20px", maxWidth: 540, margin: "0 auto", animation: "fadeUp 0.5s" }}>
+        <div style={{ fontSize: 76, marginBottom: 18 }}>{won ? "🏆" : "💪"}</div>
+        <div style={{ fontWeight: 800, fontSize: 26, color: won ? "#F7C948" : city.color, marginBottom: 10, letterSpacing: 2 }}>
+          {won ? `${city.bossName} DERROTADO!` : "CONTINUE TREINANDO!"}
         </div>
-        {won && <div style={{ color: city.color, fontSize: 14, marginBottom: 6 }}>The portal to the next city opens before you.</div>}
-        <div style={{ color: "#6b7280", fontSize: 16, marginBottom: 8 }}>{score}/{city.questions.length} correct — {pct}%</div>
-        <div style={{ color: "#F7C948", fontSize: 16, marginBottom: 32, fontFamily: "monospace" }}>+{gained} XP ⚡</div>
+        <div style={{ color: "#6b7280", fontSize: 15, marginBottom: 6 }}>{score}/{city.questions.length} corretas — {pct}%</div>
+        <div style={{ color: "#F7C948", fontSize: 15, marginBottom: 28, fontFamily: "monospace" }}>+{gained} XP ⚡</div>
         <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-          <button onClick={() => onComplete(score, city.questions.length)} style={{ padding: "14px 36px", background: `linear-gradient(135deg, ${city.color}, ${city.color}99)`, border: "none", borderRadius: 14, color: "#fff", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
-            {won ? "🗺️ World Map →" : "🗺️ Return to Map"}
+          <button onClick={() => onComplete(score, city.questions.length)} style={{ padding: "14px 32px", background: `linear-gradient(135deg, ${city.color}, ${city.color}99)`, border: "none", borderRadius: 12, color: "#fff", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+            {won ? "🗺️ Mapa Mundial →" : "🗺️ Voltar ao Mapa"}
           </button>
-          {!won && <button onClick={() => { setIdx(0); setSelected(null); setAnswered(false); setScore(0); setDone(false); }} style={{ padding: "14px 28px", background: "rgba(247,201,72,0.1)", border: "1px solid #F7C94844", borderRadius: 14, color: "#F7C948", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>🔄 Try Again</button>}
+          {!won && (
+            <button onClick={() => { setIdx(0); setSelected(null); setAnswered(false); setScore(0); setDone(false); }} style={{ padding: "14px 24px", background: "rgba(247,201,72,0.1)", border: "1px solid #F7C94844", borderRadius: 12, color: "#F7C948", fontWeight: 700, fontSize: 14, cursor: "pointer" }}>
+              🔄 Tentar Novamente
+            </button>
+          )}
         </div>
       </div>
     );
   }
 
   return (
-    <div style={{ maxWidth: 660, margin: "0 auto", animation: "fadeUp 0.5s" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-        <button onClick={onBack} style={{ background: "none", border: "1px solid #1a2040", borderRadius: 8, color: "#4b5563", padding: "6px 14px", cursor: "pointer", fontSize: 12, fontFamily: "monospace" }}>← RETREAT</button>
-        <div style={{ color: city.color, fontWeight: 800, fontSize: 13, letterSpacing: 1 }}>{city.bossEmoji} {city.bossName}</div>
+    <div style={{ maxWidth: 640, margin: "0 auto", animation: "fadeUp 0.5s" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 18 }}>
+        <button onClick={onBack} style={{ background: "none", border: "1px solid #1a2040", borderRadius: 8, color: "#4b5563", padding: "6px 14px", cursor: "pointer", fontSize: 12, fontFamily: "monospace" }}>← RECUAR</button>
+        <div style={{ color: city.color, fontWeight: 800, fontSize: 12, letterSpacing: 1 }}>{city.bossEmoji} {city.bossName}</div>
         <div style={{ color: "#F7C948", fontFamily: "monospace", fontSize: 12 }}>⚔️ {score}/{city.questions.length}</div>
       </div>
-
-      {/* Boss health bar */}
-      <div style={{ height: 6, background: "#0a0f1e", borderRadius: 99, marginBottom: 6, overflow: "hidden", border: "1px solid #1a2040" }}>
-        <div style={{ height: "100%", width: `${100 - (idx / city.questions.length) * 100}%`, background: `linear-gradient(90deg, #ef4444, #F7C948)`, borderRadius: 99, transition: "width 0.6s" }} />
+      <div style={{ height: 5, background: "#0a0f1e", borderRadius: 99, marginBottom: 20, overflow: "hidden", border: "1px solid #1a2040" }}>
+        <div style={{ height: "100%", width: `${100 - (idx / city.questions.length) * 100}%`, background: "linear-gradient(90deg, #ef4444, #F7C948)", borderRadius: 99, transition: "width 0.6s" }} />
       </div>
-      <div style={{ color: "#374151", fontSize: 10, fontFamily: "monospace", textAlign: "center", marginBottom: 20 }}>BOSS HEALTH</div>
-
-      {q.analogy && <div style={{ background: `${city.color}0d`, border: `1px solid ${city.color}22`, borderRadius: 12, padding: "12px 16px", marginBottom: 18, color: "#6b7280", fontSize: 13, fontStyle: "italic", lineHeight: 1.6 }}>{q.analogy}</div>}
-
-      <div style={{ color: "#f3f4f6", fontSize: 16, lineHeight: 1.8, marginBottom: 22, fontWeight: 500, animation: shake ? "shakeEl 0.5s" : "none" }}>{q.text}</div>
-
-      <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
+      {q.analogy && <div style={{ background: `${city.color}0d`, border: `1px solid ${city.color}22`, borderRadius: 12, padding: "12px 16px", marginBottom: 16, color: "#6b7280", fontSize: 13, fontStyle: "italic", lineHeight: 1.6 }}>{q.analogy}</div>}
+      <div style={{ color: "#f3f4f6", fontSize: 15, lineHeight: 1.8, marginBottom: 20, fontWeight: 500, animation: shake ? "shakeEl 0.5s" : "none" }}>{q.text}</div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 18 }}>
         {q.options.map((opt, i) => {
           let bg = "rgba(255,255,255,0.02)", border = "#1a2040", color = "#9ca3af";
           if (answered) {
@@ -734,24 +637,17 @@ function BossFight({ city, hero, onComplete, onBack }) {
           );
         })}
       </div>
-
       {answered && (
-        <div style={{ background: selected === q.correct ? "rgba(0,201,167,0.06)" : "rgba(247,201,72,0.06)", border: `1px solid ${selected === q.correct ? "#00C9A733" : "#F7C94833"}`, borderRadius: 14, padding: "18px 20px", color: "#d1d5db", fontSize: 13, lineHeight: 1.8, marginBottom: 18, animation: "fadeUp 0.4s" }}>
-          <div style={{ fontWeight: 700, marginBottom: 8, color: selected === q.correct ? "#00C9A7" : "#F7C948" }}>
-            {selected === q.correct ? "✨ Spell mastered!" : "📖 Learn the spell:"}
-          </div>
+        <div style={{ background: selected === q.correct ? "rgba(0,201,167,0.06)" : "rgba(247,201,72,0.06)", border: `1px solid ${selected === q.correct ? "#00C9A733" : "#F7C94833"}`, borderRadius: 14, padding: "16px 20px", color: "#d1d5db", fontSize: 13, lineHeight: 1.8, marginBottom: 16, animation: "fadeUp 0.4s" }}>
+          <div style={{ fontWeight: 700, marginBottom: 8, color: selected === q.correct ? "#00C9A7" : "#F7C948" }}>{selected === q.correct ? "✨ Feitiço dominado!" : "📖 Aprenda o feitiço:"}</div>
           {q.explanation}
         </div>
       )}
-
       {answered && (
-        <button onClick={next} style={{ width: "100%", padding: 16, background: `linear-gradient(135deg, ${city.color}, ${city.color}99)`, border: "none", borderRadius: 14, color: "#fff", fontWeight: 700, fontSize: 15, cursor: "pointer", animation: "fadeUp 0.3s" }}>
-          {idx + 1 >= city.questions.length ? "⚔️ Finish Battle" : "Next Attack →"}
+        <button onClick={next} style={{ width: "100%", padding: 16, background: `linear-gradient(135deg, ${city.color}, ${city.color}99)`, border: "none", borderRadius: 12, color: "#fff", fontWeight: 700, fontSize: 15, cursor: "pointer" }}>
+          {idx + 1 >= city.questions.length ? "⚔️ Finalizar Batalha" : "Próximo Ataque →"}
         </button>
       )}
-
-      {flash === "correct" && <div style={{ position: "fixed", inset: 0, background: "rgba(0,201,167,0.05)", pointerEvents: "none", zIndex: 999, animation: "fadeUp 0.5s forwards" }} />}
-      {flash === "wrong" && <div style={{ position: "fixed", inset: 0, background: "rgba(239,68,68,0.05)", pointerEvents: "none", zIndex: 999, animation: "fadeUp 0.5s forwards" }} />}
     </div>
   );
 }
@@ -760,8 +656,9 @@ function BossFight({ city, hero, onComplete, onBack }) {
 // MAIN APP
 // ═══════════════════════════════════════════════════════════
 export default function App() {
-  const [screen, setScreen] = useState("char"); // char | map | city | lesson | boss
+  const [screen, setScreen] = useState("char");
   const [hero, setHero] = useState(null);
+  const [appMode, setAppMode] = useState(null); // "adventure" | "arena"
   const [cities, setCities] = useState(CITIES);
   const [activeCity, setActiveCity] = useState(null);
   const [activeLesson, setActiveLesson] = useState(null);
@@ -772,19 +669,23 @@ export default function App() {
 
   const level = Math.floor(xp / 500) + 1;
 
-  const showToast = (msg, color = "#00C9A7") => { setToast({ msg, color }); setTimeout(() => setToast(null), 3500); };
+  const showToast = (msg, color = "#00C9A7") => {
+    setToast({ msg, color });
+    setTimeout(() => setToast(null), 3500);
+  };
 
-  const handleCharSelect = (c) => { setHero(c); setScreen("map"); showToast(`Welcome, ${c.name}! Your journey begins.`, c.color); };
-
-  const handleCityClick = (city) => { setActiveCity(city); setScreen("city"); };
-
-  const handleLessonClick = (lesson) => { setActiveLesson(lesson); setScreen("lesson"); };
+  const handleCharSelect = (c, mode) => {
+    setHero(c);
+    setAppMode(mode);
+    setScreen(mode === "adventure" ? "map" : "arena");
+    showToast(`Bem-vinda, ${c.name}! ${mode === "adventure" ? "🗺️" : "⚔️"}`, c.color);
+  };
 
   const handleLessonComplete = () => {
     if (!completedLessons.has(activeLesson.id)) {
       setCompletedLessons(prev => new Set([...prev, activeLesson.id]));
       setXp(x => x + XP_LESSON);
-      showToast(`+${XP_LESSON} XP! Lesson complete! ✨`, activeCity.color);
+      showToast(`+${XP_LESSON} XP! Lição completa! ✨`, activeCity.color);
     }
     setScreen("city");
   };
@@ -798,9 +699,9 @@ export default function App() {
       const idx = cities.findIndex(c => c.id === activeCity.id);
       if (idx < cities.length - 1) {
         setCities(prev => prev.map((c, i) => i === idx + 1 ? { ...c, locked: false } : c));
-        showToast(`🌟 ${cities[idx + 1].name} UNLOCKED!`, "#F7C948");
+        showToast(`🌟 ${cities[idx + 1].name} DESBLOQUEADA!`, "#F7C948");
       } else {
-        showToast("🏆 ALL SKY-CITIES CONQUERED! You are a Data Architect!", "#F7C948");
+        showToast("🏆 TODAS AS CIDADES CONQUISTADAS! Você é um Arquiteto de Dados!", "#F7C948");
       }
     }
     setScreen("city");
@@ -816,7 +717,6 @@ export default function App() {
         @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes shakeEl { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
         @keyframes floatEl { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        @keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(-16px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
         ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-thumb { background: #1a2040; border-radius: 2px; }
         button { font-family: 'Raleway', sans-serif; }
         input { font-family: 'Raleway', sans-serif; }
@@ -825,7 +725,7 @@ export default function App() {
       <Stars />
 
       {toast && (
-        <div style={{ position: "fixed", top: 20, left: "50%", transform: "translateX(-50%)", background: "#04080f", border: `1px solid ${toast.color}`, borderRadius: 12, padding: "12px 24px", color: toast.color, fontWeight: 700, fontSize: 13, zIndex: 9999, animation: "toastIn 0.4s ease", boxShadow: `0 0 30px ${toast.color}33`, fontFamily: "monospace", whiteSpace: "nowrap" }}>
+        <div style={{ position: "fixed", top: 20, left: "50%", transform: "translateX(-50%)", background: "#04080f", border: `1px solid ${toast.color}`, borderRadius: 12, padding: "12px 24px", color: toast.color, fontWeight: 700, fontSize: 13, zIndex: 9999, animation: "fadeUp 0.4s ease", boxShadow: `0 0 30px ${toast.color}33`, fontFamily: "monospace", whiteSpace: "nowrap" }}>
           {toast.msg}
         </div>
       )}
@@ -840,19 +740,23 @@ export default function App() {
               THE SCORPIO<br />
               <span style={{ background: "linear-gradient(135deg, #F7C948 0%, #f97316 60%, #a855f7 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>SKY CHRONICLES</span>
             </h1>
-            {hero && (
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginTop: 16, flexWrap: "wrap" }}>
-                <div style={{ color: hero.color, fontWeight: 700, fontSize: 14 }}>{hero.art} {hero.name}</div>
-                <div style={{ maxWidth: 280, width: "100%" }}>
-                  <XPBar xp={xp} level={level} />
-                </div>
+            {hero && screen !== "char" && (
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 16, marginTop: 14, flexWrap: "wrap" }}>
+                <div style={{ color: hero.color, fontWeight: 700, fontSize: 13 }}>{hero.art} {hero.name}</div>
+                {appMode === "adventure" && (
+                  <div style={{ maxWidth: 260, width: "100%" }}><XPBar xp={xp} level={level} /></div>
+                )}
+                <button onClick={() => { setScreen("char"); setAppMode(null); }} style={{ background: "none", border: "1px solid #1a2040", borderRadius: 8, color: "#374151", padding: "4px 12px", cursor: "pointer", fontSize: 11, fontFamily: "monospace" }}>
+                  TROCAR MODO
+                </button>
               </div>
             )}
           </div>
 
           {screen === "char" && <CharacterSelect onSelect={handleCharSelect} />}
-          {screen === "map" && <WorldMap cities={cities} hero={hero} xp={xp} level={level} completedLessons={completedLessons} completedChallenges={completedChallenges} onCityClick={handleCityClick} />}
-          {screen === "city" && <CityView city={activeCity} hero={hero} completedLessons={completedLessons} completedChallenge={completedChallenges.has(activeCity?.id)} onLesson={handleLessonClick} onChallenge={() => setScreen("boss")} onBack={() => setScreen("map")} />}
+          {screen === "arena" && <Arena hero={hero} onBack={() => setScreen("char")} />}
+          {screen === "map" && <WorldMap cities={cities} hero={hero} xp={xp} level={level} completedLessons={completedLessons} completedChallenges={completedChallenges} onCityClick={city => { setActiveCity(city); setScreen("city"); }} />}
+          {screen === "city" && <CityView city={activeCity} hero={hero} completedLessons={completedLessons} completedChallenge={completedChallenges.has(activeCity?.id)} onLesson={lesson => { setActiveLesson(lesson); setScreen("lesson"); }} onChallenge={() => setScreen("boss")} onBack={() => setScreen("map")} />}
           {screen === "lesson" && <LessonView lesson={activeLesson} city={activeCity} hero={hero} onComplete={handleLessonComplete} onBack={() => setScreen("city")} />}
           {screen === "boss" && <BossFight city={activeCity} hero={hero} onComplete={handleBossComplete} onBack={() => setScreen("city")} />}
 
