@@ -517,7 +517,7 @@ function ModeSelect({ onAdventure, onTraining }) {
     <div style={{ animation: "fadeUp 0.6s ease", maxWidth: 700, margin: "0 auto", padding: "0 20px" }}>
       <div style={{ textAlign: "center", marginBottom: 40 }}>
         <div style={{ fontSize: 13, letterSpacing: 6, color: "#374151", textTransform: "uppercase", marginBottom: 12, fontFamily: "monospace" }}>✦ CHOOSE YOUR PATH ✦</div>
-        <p style={{ color: "#4b5563", fontSize: 14, lineHeight: 1.7 }}>Two paths lead to certification mastery. Which calls to you?</p>
+        <p style={{ color: "#4b5563", fontSize: 184, lineHeight: 1.7 }}>Two paths lead to certification mastery. Which calls to you?</p>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
         {[
