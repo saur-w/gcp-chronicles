@@ -948,7 +948,7 @@ export default function App() {
   const HEADER = (
     <div style={{ textAlign: "center", marginBottom: 48 }}>
       <div style={{ fontSize: 10, letterSpacing: 8, color: "#1a2040", textTransform: "uppercase", marginBottom: 10, fontFamily: "monospace" }}>✦ GCP PROFESSIONAL DATA ENGINEER ✦</div>
-      <h1 style={{ fontFamily: "'Cinzel Decorative', serif", fontSize: "clamp(18px,3.5vw,36px)", fontWeight: 900, color: "#e5e7eb", letterSpacing: 2, marginBottom: 4, lineHeight: 1.3 }}>
+      <h1 style={{ fontFamily: "'Cinzel Decorative', serif", fontSize: "clamp(24px,4vw,48px)", fontWeight: 900, color: "#e5e7eb", letterSpacing: 2, marginBottom: 4, lineHeight: 1.3 }}>
         THE SCORPIO<br /><span style={{ background: "linear-gradient(135deg, #F7C948 0%, #f97316 60%, #a855f7 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>SKY CHRONICLES</span>
       </h1>
     </div>
@@ -969,7 +969,7 @@ export default function App() {
       <Stars />
       {toast && (<div style={{ position: "fixed", top: 20, left: "50%", transform: "translateX(-50%)", background: "#04080f", border: `1px solid ${toast.color}`, borderRadius: 12, padding: "12px 24px", color: toast.color, fontWeight: 700, fontSize: 13, zIndex: 9999, animation: "toastIn 0.4s ease", boxShadow: `0 0 30px ${toast.color}33`, fontFamily: "monospace", whiteSpace: "nowrap" }}>{toast.msg}</div>)}
       <div style={{ minHeight: "100vh", background: "radial-gradient(ellipse at 50% 0%, #070d1f 0%, #04080f 60%)", fontFamily: "'Raleway', sans-serif", color: "#e5e7eb", position: "relative", zIndex: 2 }}>
-        <div style={{ maxWidth: 900, margin: "0 auto", padding: "40px 20px" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "60px 40px" }}>
           {HEADER}
 
           {/* ── MODE SELECT ── */}
