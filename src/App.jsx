@@ -516,7 +516,7 @@ function ModeSelect({ onAdventure, onTraining }) {
   return (
     <div style={{ animation: "fadeUp 0.6s ease", maxWidth: 700, margin: "0 auto", padding: "0 20px" }}>
       <div style={{ textAlign: "center", marginBottom: 40 }}>
-        <div style={{ fontSize: 11, letterSpacing: 6, color: "#374151", textTransform: "uppercase", marginBottom: 12, fontFamily: "monospace" }}>✦ CHOOSE YOUR PATH ✦</div>
+        <div style={{ fontSize: 13, letterSpacing: 6, color: "#374151", textTransform: "uppercase", marginBottom: 12, fontFamily: "monospace" }}>✦ CHOOSE YOUR PATH ✦</div>
         <p style={{ color: "#4b5563", fontSize: 14, lineHeight: 1.7 }}>Two paths lead to certification mastery. Which calls to you?</p>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
@@ -527,9 +527,9 @@ function ModeSelect({ onAdventure, onTraining }) {
           <div key={m.id} onClick={m.onClick} onMouseEnter={() => setHov(m.id)} onMouseLeave={() => setHov(null)}
             style={{ borderRadius: 24, padding: "36px 28px", textAlign: "center", cursor: "pointer", background: "rgba(10,15,30,0.95)", border: `2px solid ${hov === m.id ? m.color : m.color + "33"}`, transition: "all 0.3s", transform: hov === m.id ? "translateY(-8px)" : "none", boxShadow: hov === m.id ? `0 20px 60px ${m.color}22` : "none" }}>
             <div style={{ fontSize: 52, marginBottom: 16 }}>{m.emoji}</div>
-            <div style={{ color: m.color, fontWeight: 900, fontSize: 18, letterSpacing: 3, marginBottom: 4 }}>{m.title}</div>
-            <div style={{ color: "#374151", fontSize: 11, fontFamily: "monospace", marginBottom: 14, letterSpacing: 2 }}>{m.sub}</div>
-            <div style={{ color: "#4b5563", fontSize: 13, lineHeight: 1.7 }}>{m.desc}</div>
+            <div style={{ color: m.color, fontWeight: 900, fontSize: 24, letterSpacing: 3, marginBottom: 4 }}>{m.title}</div>
+            <div style={{ color: "#9ca3af", fontSize: 15, fontFamily: "monospace", marginBottom: 14, letterSpacing: 2 }}>{m.sub}</div>
+            <div style={{ color: "#d1d5db", fontSize: 15, lineHeight: 1.7 }}>{m.desc}</div>
           </div>
         ))}
       </div>
